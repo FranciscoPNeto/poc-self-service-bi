@@ -12,20 +12,76 @@ import sys
 import json
 import base64
 import urllib.request
+import urllib.parse
 import re
 import time
+import mimetypes
 from http.server import HTTPServer, SimpleHTTPRequestHandler
 import importlib.util
+
+# Garantir tipos MIME essenciais
+mimetypes.add_type("application/javascript", ".js")
+mimetypes.add_type("text/css", ".css")
+mimetypes.add_type("application/json", ".json")
+mimetypes.add_type("image/svg+xml", ".svg")
 
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 PROJECT_ROOT = os.path.dirname(BASE_DIR)
 
-# Importar bridge do Fabric MCP
-sys.path.append(r"c:\Users\Francisco Neto\Desktop\Engenharia de IA\fabric-core-mcp-remote")
+# Importar bridge do Fabric MCP (se disponível localmente)
+local_bridge_path = r"c:\Users\Francisco Neto\Desktop\Engenharia de IA\fabric-core-mcp-remote"
+if os.path.exists(local_bridge_path):
+    sys.path.append(local_bridge_path)
+
 try:
     import fabric_mcp_bridge
 except ImportError:
     fabric_mcp_bridge = None
+
+def get_fabric_token():
+    """
+    Obtém o token do Fabric/Azure através de:
+    1. Variáveis de ambiente diretas (FABRIC_TOKEN, AZURE_TOKEN, etc.)
+    2. Bridge local do Fabric MCP (se ativa)
+    3. Azure Service Principal (CLIENT_ID, CLIENT_SECRET, TENANT_ID)
+    """
+    # 1. Token direto via env
+    for env_key in ("FABRIC_TOKEN", "AZURE_TOKEN", "BEARER_TOKEN", "POWERBI_TOKEN"):
+        token_val = os.environ.get(env_key)
+        if token_val:
+            return token_val.strip()
+
+    # 2. Bridge local
+    if fabric_mcp_bridge and hasattr(fabric_mcp_bridge, "get_token"):
+        try:
+            tok = fabric_mcp_bridge.get_token()
+            if tok:
+                return tok
+        except Exception:
+            pass
+
+    # 3. Azure Service Principal (OAuth2 Client Credentials)
+    client_id = os.environ.get("AZURE_CLIENT_ID") or os.environ.get("CLIENT_ID")
+    client_secret = os.environ.get("AZURE_CLIENT_SECRET") or os.environ.get("CLIENT_SECRET")
+    tenant_id = os.environ.get("AZURE_TENANT_ID") or os.environ.get("TENANT_ID")
+
+    if client_id and client_secret and tenant_id:
+        try:
+            token_url = f"https://login.microsoftonline.com/{tenant_id}/oauth2/v2.0/token"
+            data = urllib.parse.urlencode({
+                "grant_type": "client_credentials",
+                "client_id": client_id,
+                "client_secret": client_secret,
+                "scope": "https://api.fabric.microsoft.com/.default"
+            }).encode("utf-8")
+            req = urllib.request.Request(token_url, data=data, headers={"Content-Type": "application/x-www-form-urlencoded"})
+            with urllib.request.urlopen(req, timeout=10) as resp:
+                res_obj = json.loads(resp.read().decode("utf-8"))
+                return res_obj.get("access_token")
+        except Exception as e:
+            print(f"[Deploy Warning] Falha na obtenção de token Service Principal: {e}")
+
+    return None
 
 def load_module(name, path):
     spec = importlib.util.spec_from_file_location(name, path)
@@ -76,77 +132,7 @@ def save_datasets_registry(datasets):
     with open(DATASETS_REGISTRY_FILE, "w", encoding="utf-8") as f:
         json.dump(datasets, f, indent=2, ensure_ascii=False)
 
-def inspect_dataset_schema(workspace_id: str, item_id: str, force_refresh: bool = False):
-    cache_file = os.path.join(CACHE_DIR, f"{item_id}.json")
-    if not force_refresh and os.path.exists(cache_file):
-        try:
-            with open(cache_file, "r", encoding="utf-8") as cf:
-                return json.load(cf)
-        except Exception:
-            pass
-
-    if not force_refresh and item_id == "8195add5-dc47-4ad3-a3f7-78943b9ce122":
-        legacy_cache = os.path.join(PROJECT_ROOT, "schema_discovered.json")
-        if os.path.exists(legacy_cache):
-            with open(legacy_cache, "r", encoding="utf-8") as lf:
-                ld = json.load(lf)
-                schema_res = {
-                    "workspaceId": workspace_id,
-                    "datasetId": item_id,
-                    "tables": ld.get("tables", []),
-                    "measures": ld.get("measures", []),
-                    "columnsByTable": ld.get("columns_by_table", {})
-                }
-                with open(cache_file, "w", encoding="utf-8") as out:
-                    json.dump(schema_res, out, indent=2, ensure_ascii=False)
-                return schema_res
-
-    if not fabric_mcp_bridge:
-        raise RuntimeError("Fabric MCP bridge indisponível.")
-
-    req = {
-        "jsonrpc": "2.0",
-        "id": int(time.time()),
-        "method": "tools/call",
-        "params": {
-            "name": "get_item_definition",
-            "arguments": {"WorkspaceId": workspace_id, "ItemId": item_id}
-        }
-    }
-    raw_resp = fabric_mcp_bridge.send_to_fabric(json.dumps(req).encode("utf-8"))
-    resp_obj = json.loads(raw_resp.decode("utf-8"))
-
-    op_url = None
-    for item in resp_obj.get("result", {}).get("content", []):
-        t = item.get("text", "")
-        for line in t.splitlines():
-            if line.startswith("Location:"):
-                op_url = line.split("Location:", 1)[1].strip()
-
-    if not op_url:
-        raise RuntimeError("Não foi possível iniciar extração TMDL.")
-
-    token = fabric_mcp_bridge.get_token()
-    headers = {"Authorization": f"Bearer {token}"}
-
-    tmdl_data = None
-    for _ in range(12):
-        time.sleep(2)
-        req_op = urllib.request.Request(op_url, headers=headers)
-        with urllib.request.urlopen(req_op) as r:
-            st = json.loads(r.read().decode("utf-8"))
-            if st.get("status") == "Succeeded":
-                res_url = op_url + "/result"
-                req_res = urllib.request.Request(res_url, headers=headers)
-                with urllib.request.urlopen(req_res) as r2:
-                    tmdl_data = json.loads(r2.read().decode("utf-8"))
-                break
-            elif st.get("status") == "Failed":
-                raise RuntimeError("Falha na extração TMDL.")
-
-    if not tmdl_data:
-        raise TimeoutError("Timeout ao aguardar TMDL.")
-
+def parse_and_cache_tmdl(workspace_id: str, item_id: str, tmdl_data: dict, cache_file: str):
     parts = tmdl_data.get("definition", {}).get("parts", [])
     tables = []
     measures = []
@@ -188,6 +174,117 @@ def inspect_dataset_schema(workspace_id: str, item_id: str, force_refresh: bool 
         json.dump(result, out, indent=2, ensure_ascii=False)
 
     return result
+
+def inspect_dataset_schema(workspace_id: str, item_id: str, force_refresh: bool = False):
+    cache_file = os.path.join(CACHE_DIR, f"{item_id}.json")
+    if not force_refresh and os.path.exists(cache_file):
+        try:
+            with open(cache_file, "r", encoding="utf-8") as cf:
+                return json.load(cf)
+        except Exception:
+            pass
+
+    if not force_refresh and item_id == "8195add5-dc47-4ad3-a3f7-78943b9ce122":
+        legacy_cache = os.path.join(PROJECT_ROOT, "schema_discovered.json")
+        if os.path.exists(legacy_cache):
+            with open(legacy_cache, "r", encoding="utf-8") as lf:
+                ld = json.load(lf)
+                schema_res = {
+                    "workspaceId": workspace_id,
+                    "datasetId": item_id,
+                    "tables": ld.get("tables", []),
+                    "measures": ld.get("measures", []),
+                    "columnsByTable": ld.get("columns_by_table", {})
+                }
+                with open(cache_file, "w", encoding="utf-8") as out:
+                    json.dump(schema_res, out, indent=2, ensure_ascii=False)
+                return schema_res
+
+    # Tentativa 1: Via token do Fabric/Azure (ambiente na nuvem / Render)
+    token = get_fabric_token()
+    if token:
+        try:
+            get_def_url = f"https://api.fabric.microsoft.com/v1/workspaces/{workspace_id}/items/{item_id}/getDefinition"
+            headers = {"Authorization": f"Bearer {token}", "Content-Type": "application/json"}
+            req_init = urllib.request.Request(get_def_url, data=b"{}", headers=headers, method="POST")
+            with urllib.request.urlopen(req_init) as init_resp:
+                op_url = init_resp.headers.get("Location")
+
+            if op_url:
+                tmdl_data = None
+                for _ in range(12):
+                    time.sleep(2)
+                    req_op = urllib.request.Request(op_url, headers=headers)
+                    with urllib.request.urlopen(req_op) as r:
+                        st = json.loads(r.read().decode("utf-8"))
+                        if st.get("status") == "Succeeded":
+                            res_url = op_url + "/result"
+                            req_res = urllib.request.Request(res_url, headers=headers)
+                            with urllib.request.urlopen(req_res) as r2:
+                                tmdl_data = json.loads(r2.read().decode("utf-8"))
+                            break
+                        elif st.get("status") == "Failed":
+                            raise RuntimeError("Falha na extração TMDL do Fabric.")
+
+                if tmdl_data:
+                    return parse_and_cache_tmdl(workspace_id, item_id, tmdl_data, cache_file)
+        except Exception as e:
+            print(f"[Deploy Notice] Consulta direta à API do Fabric falhou ({e}). Tentando fallback...")
+
+    # Tentativa 2: Via bridge local do Fabric MCP (ambiente Windows local)
+    if fabric_mcp_bridge:
+        try:
+            req = {
+                "jsonrpc": "2.0",
+                "id": int(time.time()),
+                "method": "tools/call",
+                "params": {
+                    "name": "get_item_definition",
+                    "arguments": {"WorkspaceId": workspace_id, "ItemId": item_id}
+                }
+            }
+            raw_resp = fabric_mcp_bridge.send_to_fabric(json.dumps(req).encode("utf-8"))
+            resp_obj = json.loads(raw_resp.decode("utf-8"))
+
+            op_url = None
+            for item in resp_obj.get("result", {}).get("content", []):
+                t = item.get("text", "")
+                for line in t.splitlines():
+                    if line.startswith("Location:"):
+                        op_url = line.split("Location:", 1)[1].strip()
+
+            if op_url:
+                bridge_token = fabric_mcp_bridge.get_token()
+                headers = {"Authorization": f"Bearer {bridge_token}"}
+                tmdl_data = None
+                for _ in range(12):
+                    time.sleep(2)
+                    req_op = urllib.request.Request(op_url, headers=headers)
+                    with urllib.request.urlopen(req_op) as r:
+                        st = json.loads(r.read().decode("utf-8"))
+                        if st.get("status") == "Succeeded":
+                            res_url = op_url + "/result"
+                            req_res = urllib.request.Request(res_url, headers=headers)
+                            with urllib.request.urlopen(req_res) as r2:
+                                tmdl_data = json.loads(r2.read().decode("utf-8"))
+                            break
+                        elif st.get("status") == "Failed":
+                            raise RuntimeError("Falha na extração TMDL.")
+
+                if tmdl_data:
+                    return parse_and_cache_tmdl(workspace_id, item_id, tmdl_data, cache_file)
+        except Exception as e:
+            print(f"[Deploy Notice] Chamada via bridge local falhou ({e}).")
+
+    # Fallback seguro: se falhar ou estiver em demo na nuvem sem conexão direta, usa cache local
+    if os.path.exists(cache_file):
+        try:
+            with open(cache_file, "r", encoding="utf-8") as cf:
+                return json.load(cf)
+        except Exception:
+            pass
+
+    raise RuntimeError(f"Não foi possível obter metadados para o modelo {item_id} e nenhum cache foi encontrado.")
 
 def load_saved_pages():
     if os.path.exists(APP_STATE_FILE):
@@ -371,15 +468,31 @@ class SelfServiceHandler(SimpleHTTPRequestHandler):
             self.handle_list_templates()
         elif self.path.startswith("/api/reports"):
             self.handle_get_reports()
+        elif self.path in ("/health", "/healthz", "/ping"):
+            self.send_json({"status": "healthy", "service": "fabric-executive-studio", "uptime": "ok"})
+        elif self.path == "/favicon.ico":
+            self.send_response(204)
+            self.end_headers()
         else:
-            if self.path == "/":
-                self.path = "/index.html"
+            clean_path = urllib.parse.urlparse(self.path).path
+            if clean_path in ("/", ""):
+                clean_path = "/index.html"
             app_dir = os.path.join(PROJECT_ROOT, "app")
-            file_to_serve = os.path.normpath(os.path.join(app_dir, self.path.lstrip("/")))
+            file_to_serve = os.path.normpath(os.path.join(app_dir, clean_path.lstrip("/")))
             if os.path.commonprefix([file_to_serve, app_dir]) == app_dir and os.path.exists(file_to_serve):
+                self.path = clean_path
                 return super().do_GET()
             else:
                 self.send_error(404, "Arquivo não encontrado")
+
+    def do_HEAD(self):
+        clean_path = urllib.parse.urlparse(self.path).path
+        if clean_path in ("/", "/index.html", "/health", "/healthz", "/ping"):
+            self.send_response(200)
+            self.send_header("Content-Type", "text/html; charset=utf-8")
+            self.end_headers()
+        else:
+            super().do_HEAD()
 
     def do_POST(self):
         content_len = int(self.headers.get("Content-Length", 0))
@@ -585,9 +698,9 @@ class SelfServiceHandler(SimpleHTTPRequestHandler):
 
 def run_server(port=8080):
     os.chdir(os.path.join(PROJECT_ROOT, "app"))
-    server_address = ("", port)
+    server_address = ("0.0.0.0", port)
     httpd = HTTPServer(server_address, SelfServiceHandler)
-    print(f"Fabric App Hub Server running at http://localhost:{port}/")
+    print(f"Fabric App Hub Server running at http://0.0.0.0:{port}/")
     try:
         httpd.serve_forever()
     except KeyboardInterrupt:
