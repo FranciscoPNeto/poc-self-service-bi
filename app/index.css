@@ -227,6 +227,20 @@ body.dark-mode .btn-fluent.btn-primary {
   font-size: 11px;
 }
 
+.desktop-command-actions {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.mobile-only-dropdown {
+  display: none;
+}
+
+.mobile-nav-bar {
+  display: none;
+}
+
 /* Dropdown Menu */
 .fabric-dropdown-wrapper {
   position: relative;
@@ -1179,4 +1193,392 @@ body.dark-mode .page-tab-item.active {
 @keyframes fadeIn {
   from { opacity: 0; transform: scale(0.98); }
   to { opacity: 1; transform: scale(1); }
+}
+
+/* =========================================================
+   RESPONSIVIDADE & VERSÃO MOBILE (Power Embedded APPS Mobile)
+   ========================================================= */
+
+@media (max-width: 900px) {
+  html, body {
+    height: 100%;
+    max-height: 100%;
+    overflow: hidden;
+  }
+
+  body {
+    padding-bottom: 54px; /* Espaço para o bottom nav fixo */
+  }
+
+  /* Header Superior no Mobile */
+  .fabric-app-bar {
+    height: 50px;
+    padding: 0 12px;
+  }
+
+  .fabric-brand {
+    gap: 8px;
+  }
+
+  .fabric-logo {
+    width: 28px;
+    height: 28px;
+  }
+
+  .fabric-logo svg {
+    width: 16px;
+    height: 16px;
+  }
+
+  .fabric-app-title span:first-child {
+    font-size: 13px;
+    max-width: 145px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+
+  .fabric-app-badge {
+    display: none; /* Oculta badge longo no mobile */
+  }
+
+  .fabric-command-bar {
+    gap: 6px;
+  }
+
+  #theme-btn-text {
+    display: none; /* Apenas ícone do tema */
+  }
+
+  #btn-refresh-menu span:not(.icon-svg) {
+    display: none; /* Apenas ícone de refresh */
+  }
+
+  .desktop-command-actions {
+    display: none !important;
+  }
+
+  .mobile-only-dropdown {
+    display: inline-block !important;
+  }
+
+  #dropdown-mobile-actions-menu {
+    right: 0;
+    left: auto;
+    min-width: 230px;
+  }
+
+  #dropdown-refresh-menu {
+    right: 0;
+    left: auto;
+    min-width: 250px;
+  }
+
+  /* Layout do Workspace em Modo Mobile */
+  .fabric-workspace {
+    display: flex !important;
+    flex-direction: column;
+    height: calc(100vh - 50px - 38px - 54px);
+    overflow: hidden;
+    position: relative;
+    width: 100%;
+  }
+
+  /* Painéis no Mobile: Apenas o painel ativo é exibido */
+  .fabric-pane-left,
+  .fabric-pane-right {
+    display: none;
+    width: 100%;
+    height: 100%;
+    overflow-y: auto;
+    border: none;
+  }
+
+  .fabric-canvas-area {
+    display: flex;
+    width: 100%;
+    height: 100%;
+    overflow-y: auto;
+    padding: 14px 12px 24px 12px;
+    gap: 14px;
+    -webkit-overflow-scrolling: touch;
+  }
+
+  /* Visualização: Aba Dados */
+  .fabric-workspace.is-view-data .fabric-pane-left {
+    display: flex;
+    animation: fadeIn 0.2s ease;
+  }
+  .fabric-workspace.is-view-data .fabric-canvas-area,
+  .fabric-workspace.is-view-data .fabric-pane-right {
+    display: none !important;
+  }
+
+  /* Visualização: Aba Ajustes/Formatação */
+  .fabric-workspace.is-view-format .fabric-pane-right {
+    display: flex;
+    animation: fadeIn 0.2s ease;
+  }
+  .fabric-workspace.is-view-format .fabric-canvas-area,
+  .fabric-workspace.is-view-format .fabric-pane-left {
+    display: none !important;
+  }
+
+  /* Visualização: Aba Dashboard / Canvas (Padrão) */
+  .fabric-workspace.is-view-canvas .fabric-canvas-area {
+    display: flex;
+    animation: fadeIn 0.2s ease;
+  }
+  .fabric-workspace.is-view-canvas .fabric-pane-left,
+  .fabric-workspace.is-view-canvas .fabric-pane-right {
+    display: none !important;
+  }
+
+  /* Header de Saudação & Busca no Mobile */
+  .canvas-greeting-header {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 12px;
+  }
+
+  .greeting-title {
+    font-size: 17px;
+    flex-wrap: wrap;
+    gap: 6px;
+  }
+
+  .greeting-badge-live {
+    font-size: 10px;
+    padding: 2px 7px;
+  }
+
+  .greeting-subtitle {
+    font-size: 11px;
+    line-height: 1.4;
+  }
+
+  .greeting-actions,
+  .quick-search-box {
+    width: 100%;
+  }
+
+  .quick-search-box {
+    padding: 8px 14px;
+  }
+
+  .quick-search-box input {
+    font-size: 12px;
+  }
+
+  /* Dropzone no Mobile */
+  .canvas-dropzone {
+    min-height: 70px;
+    padding: 10px 14px;
+    text-align: center;
+  }
+
+  /* Grid de Visuais no Mobile */
+  .visuals-container-grid {
+    grid-template-columns: repeat(12, 1fr);
+    gap: 12px;
+  }
+
+  /* KPIs ocupam 6 colunas (2 por linha) em tablets/telas médias */
+  .visual-col-3,
+  .visual-col-4 {
+    grid-column: span 6;
+  }
+
+  /* Gráficos, rosca e tabelas ocupam 100% da largura */
+  .visual-col-6,
+  .visual-col-12 {
+    grid-column: span 12;
+  }
+
+  .visual-card-canvas {
+    padding: 14px 14px;
+    border-radius: var(--radius-md);
+  }
+
+  .visual-card-top {
+    margin-bottom: 10px;
+  }
+
+  .visual-card-title {
+    font-size: 12px;
+  }
+
+  .kpi-big-value {
+    font-size: 22px;
+  }
+
+  .kpi-sparkline-canvas {
+    width: 65px;
+    height: 32px;
+  }
+
+  /* Painel de Dados no Mobile */
+  .field-draggable-item {
+    padding: 10px 12px;
+  }
+
+  .btn-quick-add {
+    padding: 6px 12px;
+    font-size: 14px;
+    font-weight: 700;
+    border-radius: 8px;
+    background: #EFF6FF;
+    color: #2563EB;
+    border-color: #BFDBFE;
+  }
+
+  body.dark-mode .btn-quick-add {
+    background: #1E293B;
+    color: #60A5FA;
+    border-color: #334155;
+  }
+
+  /* Painel de Ajustes no Mobile */
+  .visual-types-grid {
+    grid-template-columns: repeat(3, 1fr);
+    gap: 8px;
+  }
+
+  .color-preset-dot {
+    width: 26px;
+    height: 26px;
+  }
+
+  /* Barra de Páginas Inferior no Mobile */
+  .powerbi-page-bar {
+    height: 38px;
+    padding: 0 10px;
+    bottom: 54px;
+    z-index: 90;
+    -webkit-overflow-scrolling: touch;
+  }
+
+  .page-tab-item {
+    padding: 4px 12px;
+    font-size: 11px;
+  }
+
+  /* Barra de Navegação Mobile (Bottom Navigation Bar) */
+  .mobile-nav-bar {
+    display: flex !important;
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    height: 54px;
+    background: var(--fabric-card-bg);
+    border-top: 1px solid var(--fabric-border-subtle);
+    z-index: 150;
+    box-shadow: 0 -3px 12px rgba(0, 0, 0, 0.05);
+    display: flex;
+    align-items: center;
+    justify-content: space-around;
+    padding: 0 4px;
+    backdrop-filter: blur(12px);
+  }
+
+  .mobile-nav-item {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 3px;
+    height: 100%;
+    background: transparent;
+    border: none;
+    color: var(--fabric-text-tertiary);
+    cursor: pointer;
+    font-family: inherit;
+    font-size: 10px;
+    font-weight: 600;
+    transition: var(--transition);
+    user-select: none;
+  }
+
+  .mobile-nav-item svg {
+    stroke-width: 2;
+    transition: transform 0.15s ease;
+  }
+
+  .mobile-nav-item:active {
+    transform: scale(0.95);
+  }
+
+  .mobile-nav-item.active {
+    color: #2563EB;
+    font-weight: 700;
+  }
+
+  body.dark-mode .mobile-nav-item.active {
+    color: #60A5FA;
+  }
+
+  .mobile-nav-item.active svg {
+    stroke: #2563EB;
+    transform: scale(1.08);
+  }
+
+  body.dark-mode .mobile-nav-item.active svg {
+    stroke: #60A5FA;
+  }
+
+  /* Modais no Mobile */
+  .modal-overlay {
+    padding: 12px;
+    align-items: flex-end; /* Abre como bottom-sheet no mobile */
+  }
+
+  .fluent-dialog {
+    width: 100% !important;
+    max-width: 100% !important;
+    max-height: 85vh;
+    border-radius: var(--radius-lg) var(--radius-lg) 0 0;
+    margin: 0;
+  }
+
+  .dialog-body {
+    max-height: 60vh;
+    overflow-y: auto;
+    padding: 14px 16px;
+  }
+
+  .dialog-footer {
+    padding: 12px 16px;
+  }
+
+  /* Toast no Mobile */
+  .fabric-toast {
+    bottom: 64px;
+    right: 12px;
+    left: 12px;
+    justify-content: center;
+  }
+}
+
+/* Telas Pequenas (Smartphones menores <= 540px) */
+@media (max-width: 540px) {
+  .visual-col-3,
+  .visual-col-4,
+  .visual-col-6,
+  .visual-col-12 {
+    grid-column: span 12 !important; /* Todos os cards em largura total */
+  }
+
+  .visual-kpi-body {
+    min-height: 52px;
+  }
+
+  .visual-chart-body {
+    height: 190px;
+  }
+
+  .visual-types-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
 }

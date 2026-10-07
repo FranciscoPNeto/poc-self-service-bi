@@ -195,6 +195,42 @@ function setupHandlers() {
   dom.btnSavePages.addEventListener('click', savePagesToServer);
   dom.btnExport.addEventListener('click', exportFabricReport);
 
+  // Menu de Ações Mobile ("...")
+  const btnMobileActions = document.getElementById('btn-mobile-actions');
+  const dropdownMobileWrapper = document.getElementById('dropdown-mobile-actions-wrapper');
+  if (btnMobileActions && dropdownMobileWrapper) {
+    btnMobileActions.addEventListener('click', (e) => {
+      e.stopPropagation();
+      dropdownMobileWrapper.classList.toggle('open');
+    });
+
+    document.addEventListener('click', (e) => {
+      if (!dropdownMobileWrapper.contains(e.target)) {
+        dropdownMobileWrapper.classList.remove('open');
+      }
+    });
+
+    const bindMobileBtn = (mobileId, targetBtn) => {
+      const el = document.getElementById(mobileId);
+      if (el && targetBtn) {
+        el.addEventListener('click', () => {
+          dropdownMobileWrapper.classList.remove('open');
+          targetBtn.click();
+        });
+      }
+    };
+
+    bindMobileBtn('btn-mobile-save', dom.btnSavePages);
+    bindMobileBtn('btn-mobile-export', dom.btnExport);
+    bindMobileBtn('btn-mobile-export-template', dom.btnExportTemplate);
+    bindMobileBtn('btn-mobile-templates', dom.btnOpenTemplatesModal);
+    bindMobileBtn('btn-mobile-add-ds', dom.btnOpenAdd);
+    bindMobileBtn('btn-mobile-def', dom.btnViewDef);
+  }
+
+  // Navegação Mobile (Bottom Bar)
+  setupMobileNavigation();
+
   // Busca / Filtro rápido no Canvas
   if (dom.inpCanvasFilter) {
     dom.inpCanvasFilter.addEventListener('input', (e) => {
@@ -374,6 +410,35 @@ function setupDragAndDrop() {
       }
     });
   });
+}
+
+function setupMobileNavigation() {
+  const navItems = document.querySelectorAll('.mobile-nav-item');
+  navItems.forEach(item => {
+    item.addEventListener('click', () => {
+      const view = item.dataset.view;
+      switchMobileView(view);
+    });
+  });
+}
+
+function switchMobileView(viewName) {
+  const ws = document.querySelector('.fabric-workspace');
+  if (!ws) return;
+  ws.classList.remove('is-view-canvas', 'is-view-data', 'is-view-format');
+  ws.classList.add(`is-view-${viewName}`);
+
+  document.querySelectorAll('.mobile-nav-item').forEach(item => {
+    item.classList.toggle('active', item.dataset.view === viewName);
+  });
+
+  if (viewName === 'canvas') {
+    setTimeout(() => {
+      Object.values(state.chartInstances).forEach(c => {
+        try { if (c) c.resize(); } catch (e) {}
+      });
+    }, 60);
+  }
 }
 
 // 1. Carregar Datasets e Metadados TMDL
@@ -629,6 +694,14 @@ function createVisualFromField(field) {
   appendSingleVisualCard(newVisual);
   selectVisualForCustomization(newVisual);
   notify(`Visual criado a partir de [${field.name}].`);
+
+  if (window.innerWidth <= 900) {
+    switchMobileView('canvas');
+    setTimeout(() => {
+      const newCard = document.getElementById(`card_${visualId}`);
+      if (newCard) newCard.scrollIntoView({ behavior: 'smooth', block: 'center' });
+    }, 150);
+  }
 }
 
 // 4. Renderizar Visuais da Página Ativa
