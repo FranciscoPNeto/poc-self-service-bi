@@ -1,0 +1,866 @@
+/* Design System: Microsoft Fabric & Power BI Clean Enterprise Aesthetic */
+:root {
+  --fabric-primary: #0078D4;
+  --fabric-primary-hover: #106EBE;
+  --fabric-teal: #008272;
+  --fabric-green: #107C41;
+  --fabric-neutral-light: #F0F2F5;
+  --fabric-neutral-lighter: #FAF9F8;
+  --fabric-white: #FFFFFF;
+  --fabric-border: #EDEBE9;
+  --fabric-border-subtle: #E1DFDD;
+  --fabric-text-primary: #201F1E;
+  --fabric-text-secondary: #605E5C;
+  --fabric-text-tertiary: #A19F9D;
+  --fabric-canvas-bg: #F3F5F8;
+  --fabric-card-bg: #FFFFFF;
+  --fabric-pane-bg: #FFFFFF;
+  --fabric-header-bg: #FFFFFF;
+  --fabric-shadow-subtle: 0 1.6px 3.6px 0 rgba(0,0,0,0.132), 0 0.3px 0.9px 0 rgba(0,0,0,0.108);
+  --fabric-shadow-card: 0 2px 6px 0 rgba(0,0,0,0.05), 0 0.5px 1.5px 0 rgba(0,0,0,0.03);
+  --fabric-shadow-elevated: 0 6.4px 14.4px 0 rgba(0,0,0,0.12), 0 1.2px 3.6px 0 rgba(0,0,0,0.08);
+  --radius-xs: 3px;
+  --radius-sm: 4px;
+  --radius-md: 6px;
+  --transition: all 0.12s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* Modo Escuro (Dark Mode Empresarial Fabric / Power BI) */
+body.dark-mode {
+  --fabric-neutral-light: #18191A;
+  --fabric-neutral-lighter: #242526;
+  --fabric-white: #242526;
+  --fabric-border: #3A3B3C;
+  --fabric-border-subtle: #4E4F50;
+  --fabric-text-primary: #E4E6EB;
+  --fabric-text-secondary: #B0B3B8;
+  --fabric-text-tertiary: #8A8D91;
+  --fabric-canvas-bg: #18191A;
+  --fabric-card-bg: #242526;
+  --fabric-pane-bg: #1F2021;
+  --fabric-header-bg: #1F2021;
+  --fabric-shadow-card: 0 2px 6px 0 rgba(0,0,0,0.4);
+  --fabric-shadow-elevated: 0 6.4px 14.4px 0 rgba(0,0,0,0.5);
+}
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html, body {
+  height: 100vh;
+  max-height: 100vh;
+  overflow: hidden;
+}
+
+body {
+  font-family: 'Segoe UI', -apple-system, BlinkMacSystemFont, Roboto, sans-serif;
+  background-color: var(--fabric-neutral-light);
+  color: var(--fabric-text-primary);
+  display: flex;
+  flex-direction: column;
+  -webkit-font-smoothing: antialiased;
+  transition: background-color 0.2s ease, color 0.2s ease;
+}
+
+/* Fabric Suite Header */
+.fabric-app-bar {
+  height: 44px;
+  background-color: var(--fabric-header-bg);
+  border-bottom: 1px solid var(--fabric-border-subtle);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 16px;
+  flex-shrink: 0;
+  z-index: 100;
+}
+
+.fabric-brand {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.fabric-logo {
+  width: 22px;
+  height: 22px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.fabric-app-title {
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--fabric-text-primary);
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.fabric-app-badge {
+  font-size: 10px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.3px;
+  background: rgba(0, 120, 212, 0.15);
+  color: var(--fabric-primary);
+  padding: 1px 6px;
+  border-radius: 2px;
+}
+
+.fabric-command-bar {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.icon-svg {
+  display: inline-block;
+  vertical-align: middle;
+}
+
+/* Modern Power BI Ribbon Button */
+.btn-fluent {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 5px 10px;
+  border-radius: var(--radius-xs);
+  font-size: 12px;
+  font-weight: 500;
+  cursor: pointer;
+  border: 1px solid transparent;
+  transition: var(--transition);
+  outline: none;
+  background: transparent;
+  color: var(--fabric-text-primary);
+  font-family: inherit;
+}
+
+.btn-fluent:hover {
+  background-color: rgba(128, 128, 128, 0.12);
+}
+
+.btn-fluent.btn-primary {
+  background-color: var(--fabric-primary);
+  color: white;
+  border-color: var(--fabric-primary);
+}
+
+.btn-fluent.btn-primary:hover {
+  background-color: var(--fabric-primary-hover);
+}
+
+.btn-fluent.btn-outline {
+  border-color: var(--fabric-border-subtle);
+  background-color: var(--fabric-card-bg);
+}
+
+.btn-fluent.btn-outline:hover {
+  background-color: rgba(128, 128, 128, 0.08);
+  border-color: var(--fabric-text-tertiary);
+}
+
+.btn-sm {
+  padding: 3px 8px;
+  font-size: 11px;
+}
+
+/* Dropdown Menu (Estilo Power BI / Fabric Ribbon) */
+.fabric-dropdown-wrapper {
+  position: relative;
+  display: inline-block;
+}
+
+.fabric-dropdown-menu {
+  position: absolute;
+  top: calc(100% + 4px);
+  left: 0;
+  min-width: 260px;
+  background-color: var(--fabric-card-bg);
+  border: 1px solid var(--fabric-border);
+  border-radius: var(--radius-sm);
+  box-shadow: var(--shadow-md);
+  padding: 6px;
+  display: none;
+  flex-direction: column;
+  gap: 2px;
+  z-index: 1000;
+  animation: fadeIn 0.15s ease;
+}
+
+.fabric-dropdown-wrapper.open .fabric-dropdown-menu {
+  display: flex;
+}
+
+.dropdown-item {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  width: 100%;
+  padding: 8px 10px;
+  border-radius: var(--radius-xs);
+  border: none;
+  background: transparent;
+  color: var(--fabric-text-primary);
+  text-align: left;
+  cursor: pointer;
+  transition: var(--transition);
+  font-family: inherit;
+}
+
+.dropdown-item:hover {
+  background-color: rgba(128, 128, 128, 0.1);
+}
+
+.dropdown-item .icon-svg {
+  color: var(--fabric-primary);
+  flex-shrink: 0;
+}
+
+.dropdown-item-title {
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--fabric-text-primary);
+}
+
+.dropdown-item-desc {
+  font-size: 10px;
+  color: var(--fabric-text-tertiary);
+  margin-top: 1px;
+}
+
+.dropdown-divider {
+  height: 1px;
+  background-color: var(--fabric-border);
+  margin: 4px 0;
+}
+
+.spinning {
+  animation: spin 0.8s linear infinite;
+}
+
+@keyframes spin {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}
+
+/* App Main Grid */
+.fabric-workspace {
+  display: grid;
+  grid-template-columns: 290px 1fr 240px;
+  flex: 1;
+  height: calc(100vh - 44px - 36px);
+  overflow: hidden;
+}
+
+/* Left Pane: Fields & Datasets com Scroll Completo */
+.fabric-pane-left {
+  background-color: var(--fabric-pane-bg);
+  border-right: 1px solid var(--fabric-border-subtle);
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  overflow: hidden;
+}
+
+.pane-section-header {
+  padding: 10px 14px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border-bottom: 1px solid var(--fabric-border);
+  background: var(--fabric-neutral-lighter);
+  flex-shrink: 0;
+}
+
+.pane-section-title {
+  font-size: 11px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  color: var(--fabric-text-secondary);
+}
+
+.badge-subtle {
+  font-size: 11px;
+  color: var(--fabric-text-tertiary);
+}
+
+.pane-instruction {
+  padding: 8px 14px;
+  font-size: 11px;
+  color: var(--fabric-text-secondary);
+  background: var(--fabric-neutral-lighter);
+  border-bottom: 1px solid var(--fabric-border);
+  line-height: 1.4;
+  flex-shrink: 0;
+}
+
+/* Área de Campos com Scroll Perfeito */
+#dataset-fields-container {
+  flex: 1;
+  overflow-y: auto;
+  overflow-x: hidden;
+  padding-bottom: 20px;
+}
+
+/* Custom Scrollbar Slim */
+#dataset-fields-container::-webkit-scrollbar,
+.fabric-canvas-area::-webkit-scrollbar,
+.fabric-pane-right::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+
+#dataset-fields-container::-webkit-scrollbar-thumb,
+.fabric-canvas-area::-webkit-scrollbar-thumb,
+.fabric-pane-right::-webkit-scrollbar-thumb {
+  background: rgba(128, 128, 128, 0.3);
+  border-radius: 3px;
+}
+
+#dataset-fields-container::-webkit-scrollbar-thumb:hover,
+.fabric-canvas-area::-webkit-scrollbar-thumb:hover,
+.fabric-pane-right::-webkit-scrollbar-thumb:hover {
+  background: rgba(128, 128, 128, 0.5);
+}
+
+.dataset-group {
+  border-bottom: 1px solid var(--fabric-border);
+}
+
+.dataset-group-header {
+  padding: 8px 12px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  cursor: pointer;
+  background: var(--fabric-pane-bg);
+  transition: var(--transition);
+}
+
+.dataset-group-header:hover {
+  background-color: rgba(128, 128, 128, 0.08);
+}
+
+.dataset-group-left {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.dataset-color-bar {
+  width: 3px;
+  height: 16px;
+  border-radius: 1px;
+}
+
+.dataset-header-name {
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--fabric-text-primary);
+}
+
+.dataset-metrics-count {
+  font-size: 10px;
+  color: var(--fabric-text-tertiary);
+}
+
+.dataset-group-items {
+  padding: 4px 10px 8px 10px;
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+  background-color: var(--fabric-neutral-lighter);
+}
+
+/* Draggable Items */
+.field-draggable-item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 5px 8px;
+  background: var(--fabric-card-bg);
+  border: 1px solid var(--fabric-border);
+  border-radius: var(--radius-xs);
+  font-size: 12px;
+  cursor: grab;
+  transition: var(--transition);
+  user-select: none;
+}
+
+.field-draggable-item:active {
+  cursor: grabbing;
+}
+
+.field-draggable-item:hover {
+  border-color: var(--fabric-primary);
+  box-shadow: 0 1px 4px rgba(0, 120, 212, 0.15);
+}
+
+.field-name-wrap {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.drag-grip {
+  color: var(--fabric-text-tertiary);
+  cursor: grab;
+}
+
+.btn-quick-add {
+  background: none;
+  border: none;
+  color: var(--fabric-text-tertiary);
+  cursor: pointer;
+  padding: 1px 4px;
+  border-radius: 2px;
+  font-size: 13px;
+  display: flex;
+  align-items: center;
+}
+
+.btn-quick-add:hover {
+  color: var(--fabric-primary);
+  background-color: rgba(0, 120, 212, 0.15);
+}
+
+.field-badge-type {
+  font-size: 9px;
+  font-weight: 600;
+  text-transform: uppercase;
+  padding: 1px 4px;
+  border-radius: 2px;
+}
+
+.badge-measure {
+  background: rgba(46, 125, 50, 0.15);
+  color: #4CAF50;
+}
+
+.badge-dim {
+  background: rgba(21, 101, 192, 0.15);
+  color: #64B5F6;
+}
+
+/* Center Canvas: Visual Board */
+.fabric-canvas-area {
+  background-color: var(--fabric-canvas-bg);
+  overflow-y: auto;
+  padding: 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  position: relative;
+}
+
+/* Drop Zone Area */
+.canvas-dropzone {
+  min-height: 72px;
+  border: 2px dashed var(--fabric-border-subtle);
+  border-radius: var(--radius-sm);
+  background: rgba(255, 255, 255, 0.05);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+  gap: 4px;
+  color: var(--fabric-text-secondary);
+  font-size: 12px;
+  transition: var(--transition);
+  padding: 10px;
+}
+
+.canvas-dropzone.drag-over {
+  border-color: var(--fabric-primary);
+  background: rgba(0, 120, 212, 0.1);
+  color: var(--fabric-primary);
+  box-shadow: 0 0 10px rgba(0, 120, 212, 0.2);
+}
+
+.visuals-container-grid {
+  display: grid;
+  grid-template-columns: repeat(12, 1fr);
+  gap: 14px;
+}
+
+/* Visual Card na Tela */
+.visual-card-canvas {
+  background: var(--fabric-card-bg);
+  border: 1px solid var(--fabric-border);
+  border-radius: var(--radius-sm);
+  padding: 12px 14px;
+  box-shadow: var(--fabric-shadow-card);
+  display: flex;
+  flex-direction: column;
+  position: relative;
+  transition: var(--transition);
+  cursor: pointer;
+}
+
+.visual-card-canvas:hover {
+  box-shadow: var(--fabric-shadow-elevated);
+}
+
+.visual-card-canvas.selected-visual {
+  outline: 2px solid var(--fabric-primary);
+  box-shadow: 0 0 0 4px rgba(0, 120, 212, 0.15);
+}
+
+.visual-col-3 { grid-column: span 3; }
+.visual-col-4 { grid-column: span 4; }
+.visual-col-6 { grid-column: span 6; }
+.visual-col-12 { grid-column: span 12; }
+
+.visual-card-top {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 8px;
+  padding-bottom: 6px;
+  border-bottom: 1px solid var(--fabric-border);
+}
+
+.visual-card-title {
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--fabric-text-primary);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.visual-card-actions {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.btn-icon {
+  background: none;
+  border: none;
+  cursor: pointer;
+  color: var(--fabric-text-tertiary);
+  padding: 2px 4px;
+  border-radius: var(--radius-xs);
+  display: flex;
+  align-items: center;
+}
+
+.btn-icon:hover {
+  color: #D13438;
+  background-color: rgba(209, 52, 56, 0.1);
+}
+
+/* Tipo Selector no Card */
+.visual-type-select {
+  font-size: 11px;
+  border: 1px solid var(--fabric-border-subtle);
+  border-radius: var(--radius-xs);
+  padding: 2px 6px;
+  background: var(--fabric-card-bg);
+  color: var(--fabric-text-primary);
+  outline: none;
+  font-family: inherit;
+}
+
+/* Visual Body Types */
+.visual-kpi-body {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  padding: 8px 0;
+}
+
+.kpi-big-value {
+  font-size: 24px;
+  font-weight: 600;
+  letter-spacing: -0.3px;
+  color: var(--fabric-text-primary);
+  line-height: 1.1;
+}
+
+.kpi-sub-text {
+  font-size: 10px;
+  color: var(--fabric-text-tertiary);
+  margin-top: 4px;
+}
+
+.visual-chart-body {
+  height: 200px;
+  width: 100%;
+  position: relative;
+}
+
+/* Right Pane: Visualizations & Formatter */
+.fabric-pane-right {
+  background-color: var(--fabric-pane-bg);
+  border-left: 1px solid var(--fabric-border-subtle);
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  overflow-y: auto;
+}
+
+.visual-types-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 6px;
+  padding: 12px;
+}
+
+.visual-type-btn {
+  background: var(--fabric-neutral-lighter);
+  border: 1px solid var(--fabric-border);
+  border-radius: var(--radius-xs);
+  padding: 8px 6px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 5px;
+  cursor: pointer;
+  transition: var(--transition);
+  font-size: 11px;
+  color: var(--fabric-text-secondary);
+  user-select: none;
+}
+
+.visual-type-btn:hover {
+  background: rgba(128, 128, 128, 0.1);
+  border-color: var(--fabric-text-tertiary);
+  color: var(--fabric-text-primary);
+}
+
+.visual-type-btn.active {
+  background: rgba(0, 120, 212, 0.15);
+  border-color: var(--fabric-primary);
+  color: var(--fabric-primary);
+  font-weight: 600;
+}
+
+/* Painel de Formatação do Visual Selecionado */
+.format-property-group {
+  padding: 12px 14px;
+  border-top: 1px solid var(--fabric-border);
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.format-label {
+  font-size: 11px;
+  font-weight: 600;
+  color: var(--fabric-text-secondary);
+}
+
+.format-input {
+  width: 100%;
+  border: 1px solid var(--fabric-border-subtle);
+  border-radius: var(--radius-xs);
+  padding: 5px 8px;
+  font-size: 12px;
+  font-family: inherit;
+  background: var(--fabric-card-bg);
+  color: var(--fabric-text-primary);
+  outline: none;
+}
+
+.color-presets-row {
+  display: flex;
+  gap: 6px;
+  align-items: center;
+}
+
+.color-preset-dot {
+  width: 18px;
+  height: 18px;
+  border-radius: 50%;
+  cursor: pointer;
+  border: 2px solid transparent;
+  transition: transform 0.1s ease;
+}
+
+.color-preset-dot:hover {
+  transform: scale(1.15);
+}
+
+.color-preset-dot.active {
+  border-color: var(--fabric-text-primary);
+}
+
+/* Bottom Page Navigation (Abas estilo Power BI) */
+.powerbi-page-bar {
+  height: 36px;
+  background-color: var(--fabric-header-bg);
+  border-top: 1px solid var(--fabric-border-subtle);
+  display: flex;
+  align-items: center;
+  padding: 0 12px;
+  gap: 4px;
+  overflow-x: auto;
+  flex-shrink: 0;
+}
+
+.page-tab-item {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 4px 12px;
+  font-size: 11px;
+  font-weight: 500;
+  border: 1px solid transparent;
+  border-radius: var(--radius-xs);
+  cursor: pointer;
+  color: var(--fabric-text-secondary);
+  background: transparent;
+  transition: var(--transition);
+  user-select: none;
+  font-family: inherit;
+  white-space: nowrap;
+}
+
+.page-tab-item:hover {
+  background-color: rgba(128, 128, 128, 0.1);
+  color: var(--fabric-text-primary);
+}
+
+.page-tab-item.active {
+  background-color: rgba(0, 120, 212, 0.15);
+  color: var(--fabric-primary);
+  font-weight: 600;
+  border-color: rgba(0, 120, 212, 0.3);
+}
+
+.btn-add-page {
+  padding: 4px 8px;
+  border: none;
+  background: transparent;
+  color: var(--fabric-text-secondary);
+  cursor: pointer;
+  border-radius: var(--radius-xs);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.btn-add-page:hover {
+  background: rgba(128, 128, 128, 0.1);
+  color: var(--fabric-primary);
+}
+
+/* Toast */
+.fabric-toast {
+  position: fixed;
+  bottom: 46px;
+  right: 20px;
+  background: var(--fabric-text-primary);
+  color: var(--fabric-card-bg);
+  padding: 8px 14px;
+  border-radius: var(--radius-xs);
+  font-size: 12px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  box-shadow: var(--fabric-shadow-elevated);
+  z-index: 300;
+  opacity: 0;
+  transform: translateY(16px);
+  transition: var(--transition);
+  pointer-events: none;
+}
+
+.fabric-toast.show {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* Modais Fluent */
+.modal-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.5);
+  backdrop-filter: blur(2px);
+  display: none;
+  align-items: center;
+  justify-content: center;
+  z-index: 200;
+}
+
+.modal-overlay.open {
+  display: flex;
+}
+
+.fluent-dialog {
+  background: var(--fabric-card-bg);
+  border-radius: var(--radius-sm);
+  box-shadow: var(--fabric-shadow-elevated);
+  width: 100%;
+  max-width: 500px;
+  overflow: hidden;
+  border: 1px solid var(--fabric-border);
+}
+
+.dialog-header {
+  padding: 14px 18px;
+  border-bottom: 1px solid var(--fabric-border);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.dialog-header h3 {
+  font-size: 14px;
+  font-weight: 600;
+}
+
+.dialog-body {
+  padding: 16px 18px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.fluent-input-group {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.fluent-input-group label {
+  font-size: 11px;
+  font-weight: 600;
+  color: var(--fabric-text-secondary);
+}
+
+.fluent-input-group input, .fluent-input-group textarea {
+  border: 1px solid var(--fabric-border-subtle);
+  border-radius: var(--radius-xs);
+  padding: 7px 9px;
+  font-size: 12px;
+  font-family: inherit;
+  outline: none;
+  background: var(--fabric-card-bg);
+  color: var(--fabric-text-primary);
+}
+
+.fluent-input-group input:focus, .fluent-input-group textarea:focus {
+  border-color: var(--fabric-primary);
+}
+
+.dialog-footer {
+  padding: 12px 18px;
+  background: var(--fabric-neutral-lighter);
+  border-top: 1px solid var(--fabric-border);
+  display: flex;
+  justify-content: flex-end;
+  gap: 8px;
+}

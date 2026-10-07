@@ -1,0 +1,16 @@
+[
+  {
+    "id": "8195add5-dc47-4ad3-a3f7-78943b9ce122",
+    "workspaceId": "5015771e-8558-4bd6-8392-b70bf61d7b15",
+    "displayName": "Atendimento Laboratorial",
+    "description": "Modelo de análise de faturamento, metas e atendimentos laboratoriais",
+    "source": "Fabric MCP"
+  },
+  {
+    "id": "1a743416-65a2-4685-ba14-719429802c41",
+    "workspaceId": "5015771e-8558-4bd6-8392-b70bf61d7b15",
+    "displayName": "Infotransito Recife",
+    "description": "Dados estatísticos de trânsito e ocorrências viárias",
+    "source": "Fabric MCP"
+  }
+]

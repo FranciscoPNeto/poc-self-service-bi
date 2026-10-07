@@ -1,0 +1,124 @@
+{
+  "schemaVersion": "1.0-fabric-metadata-template",
+  "name": "teste1",
+  "description": "Template de layout corporativo reutilizável",
+  "createdAt": "2026-10-07T04:02:57Z",
+  "theme": "light",
+  "pages": [
+    {
+      "id": "page_health",
+      "name": "Detalhamento Laboratório",
+      "visuals": [
+        {
+          "id": "vh1",
+          "visualType": "kpi",
+          "datasetId": "8195add5-dc47-4ad3-a3f7-78943b9ce122",
+          "workspaceId": "5015771e-8558-4bd6-8392-b70bf61d7b15",
+          "datasetName": "Atendimento Laboratorial",
+          "color": "#0078D4",
+          "table": "Medidas",
+          "measure": "Meta Faturamento",
+          "title": "Meta Faturamento",
+          "value": "R$ 1.950.000",
+          "colSpan": 3
+        },
+        {
+          "id": "vh2",
+          "visualType": "kpi",
+          "datasetId": "8195add5-dc47-4ad3-a3f7-78943b9ce122",
+          "workspaceId": "5015771e-8558-4bd6-8392-b70bf61d7b15",
+          "datasetName": "Atendimento Laboratorial",
+          "color": "#0078D4",
+          "table": "Medidas",
+          "measure": "Atingimento de meta",
+          "title": "Atingimento de Meta",
+          "value": "94.5%",
+          "colSpan": 3
+        },
+        {
+          "id": "vh3",
+          "visualType": "donut",
+          "datasetId": "8195add5-dc47-4ad3-a3f7-78943b9ce122",
+          "workspaceId": "5015771e-8558-4bd6-8392-b70bf61d7b15",
+          "datasetName": "Atendimento Laboratorial",
+          "color": "#0078D4",
+          "table": "Medidas",
+          "measure": "Faturamento",
+          "dimension": "Convênio",
+          "title": "Distribuição por Convênio",
+          "colSpan": 6
+        },
+        {
+          "id": "vis_1791345702051_960",
+          "visualType": "kpi",
+          "datasetId": "8195add5-dc47-4ad3-a3f7-78943b9ce122",
+          "workspaceId": "5015771e-8558-4bd6-8392-b70bf61d7b15",
+          "datasetName": "Atendimento Laboratorial",
+          "color": "#0078D4",
+          "table": "Medidas",
+          "measure": "Acima da Meta",
+          "dimension": null,
+          "title": "Acima da Meta",
+          "value": "94.5%",
+          "colSpan": 3
+        },
+        {
+          "id": "vis_1791345703347_362",
+          "visualType": "kpi",
+          "datasetId": "8195add5-dc47-4ad3-a3f7-78943b9ce122",
+          "workspaceId": "5015771e-8558-4bd6-8392-b70bf61d7b15",
+          "datasetName": "Atendimento Laboratorial",
+          "color": "#0078D4",
+          "table": "Medidas",
+          "measure": "Faturamento LY",
+          "dimension": null,
+          "title": "Faturamento LY",
+          "value": "R$ 1.842.500",
+          "colSpan": 3
+        },
+        {
+          "id": "vis_1791345704533_843",
+          "visualType": "kpi",
+          "datasetId": "8195add5-dc47-4ad3-a3f7-78943b9ce122",
+          "workspaceId": "5015771e-8558-4bd6-8392-b70bf61d7b15",
+          "datasetName": "Atendimento Laboratorial",
+          "color": "#0078D4",
+          "table": "Procedimento",
+          "measure": null,
+          "dimension": "ID Procedimento",
+          "title": "ID Procedimento",
+          "value": "14.820",
+          "colSpan": 3
+        },
+        {
+          "id": "vis_1791345731067_723",
+          "visualType": "kpi",
+          "datasetId": "8195add5-dc47-4ad3-a3f7-78943b9ce122",
+          "workspaceId": "5015771e-8558-4bd6-8392-b70bf61d7b15",
+          "datasetName": "Atendimento Laboratorial",
+          "color": "#0078D4",
+          "table": "Medidas",
+          "measure": "Texto",
+          "dimension": null,
+          "title": "Texto",
+          "value": "14.820",
+          "colSpan": 3
+        },
+        {
+          "id": "vis_1791345734113_427",
+          "visualType": "area",
+          "datasetId": "8195add5-dc47-4ad3-a3f7-78943b9ce122",
+          "workspaceId": "5015771e-8558-4bd6-8392-b70bf61d7b15",
+          "datasetName": "Atendimento Laboratorial",
+          "color": "#D83B01",
+          "table": "Medidas",
+          "measure": "Atingimento de meta comp.",
+          "dimension": null,
+          "title": "Atingimento de meta comp.",
+          "value": "94.5%",
+          "colSpan": 6
+        }
+      ]
+    }
+  ]
+}

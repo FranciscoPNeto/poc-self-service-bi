@@ -1,0 +1,19 @@
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.env
+.env
+
+# Virtual Environment
+venv/
+env/
+.venv/
+
+# Antigravity internal/scratch
+.antigravity/scratch/
+*.log
+
+# IDE
+.vscode/
+.idea/

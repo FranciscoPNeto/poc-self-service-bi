@@ -1,0 +1,271 @@
+{
+  "reportDefinition": {
+    "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/1.0.0/schema.json",
+    "theme": "Modern Minimalist",
+    "report": {
+      "title": "Dashboard Self-Service - Atendimento Laboratorial",
+      "dataset": {
+        "workspaceId": "5015771e-8558-4bd6-8392-b70bf61d7b15",
+        "datasetId": "8195add5-dc47-4ad3-a3f7-78943b9ce122",
+        "datasetName": "Atendimento Laboratorial",
+        "connectionMode": "LiveConnection"
+      },
+      "layout": {
+        "columns": 12,
+        "gap": "16px"
+      },
+      "visuals": [
+        {
+          "id": "kpi_card_1",
+          "type": "kpiCard",
+          "title": "Faturamento",
+          "field": {
+            "table": "Medidas",
+            "measure": "Faturamento",
+            "dax": "[Faturamento]"
+          },
+          "position": {
+            "colSpan": 3,
+            "rowSpan": 1
+          },
+          "formatting": {
+            "showTitle": true,
+            "accentColor": "#6366f1"
+          }
+        },
+        {
+          "id": "kpi_card_2",
+          "type": "kpiCard",
+          "title": "Faturamento LY",
+          "field": {
+            "table": "Medidas",
+            "measure": "Faturamento LY",
+            "dax": "[Faturamento LY]"
+          },
+          "position": {
+            "colSpan": 3,
+            "rowSpan": 1
+          },
+          "formatting": {
+            "showTitle": true,
+            "accentColor": "#6366f1"
+          }
+        },
+        {
+          "id": "kpi_card_3",
+          "type": "kpiCard",
+          "title": "Acima da Meta",
+          "field": {
+            "table": "Medidas",
+            "measure": "Acima da Meta",
+            "dax": "[Acima da Meta]"
+          },
+          "position": {
+            "colSpan": 3,
+            "rowSpan": 1
+          },
+          "formatting": {
+            "showTitle": true,
+            "accentColor": "#6366f1"
+          }
+        },
+        {
+          "id": "kpi_card_4",
+          "type": "kpiCard",
+          "title": "Atendimentos",
+          "field": {
+            "table": "Medidas",
+            "measure": "Atendimentos",
+            "dax": "[Atendimentos]"
+          },
+          "position": {
+            "colSpan": 3,
+            "rowSpan": 1
+          },
+          "formatting": {
+            "showTitle": true,
+            "accentColor": "#6366f1"
+          }
+        },
+        {
+          "id": "kpi_card_5",
+          "type": "kpiCard",
+          "title": "Até a Meta",
+          "field": {
+            "table": "Medidas",
+            "measure": "Até a Meta",
+            "dax": "[Até a Meta]"
+          },
+          "position": {
+            "colSpan": 3,
+            "rowSpan": 1
+          },
+          "formatting": {
+            "showTitle": true,
+            "accentColor": "#6366f1"
+          }
+        },
+        {
+          "id": "chart_cat_6",
+          "type": "barChart",
+          "title": "Distribuição por ID Convênio",
+          "categoryAxis": {
+            "table": "Convenio",
+            "column": "ID Convênio"
+          },
+          "values": [
+            {
+              "table": "Medidas",
+              "measure": "Faturamento"
+            },
+            {
+              "table": "Medidas",
+              "measure": "Faturamento LY"
+            }
+          ],
+          "position": {
+            "colSpan": 4,
+            "rowSpan": 2
+          }
+        },
+        {
+          "id": "table_detail_7",
+          "type": "matrixTable",
+          "title": "Visão Analítica Detalhada",
+          "columns": [
+            {
+              "type": "dimension",
+              "table": "Convenio",
+              "name": "ID Convênio"
+            },
+            {
+              "type": "dimension",
+              "table": "Convenio",
+              "name": "Convênio"
+            },
+            {
+              "type": "dimension",
+              "table": "Procedimento",
+              "name": "ID Procedimento"
+            },
+            {
+              "type": "dimension",
+              "table": "Procedimento",
+              "name": "Procedimento"
+            },
+            {
+              "type": "dimension",
+              "table": "Recepcionista",
+              "name": "ID Recepcionista"
+            },
+            {
+              "type": "dimension",
+              "table": "Atendimento",
+              "name": "ID Convênio"
+            },
+            {
+              "type": "dimension",
+              "table": "Atendimento",
+              "name": "ID Procedimento"
+            },
+            {
+              "type": "dimension",
+              "table": "Atendimento",
+              "name": "ID Recepcionista"
+            },
+            {
+              "type": "dimension",
+              "table": "Atendimento",
+              "name": "Valor"
+            },
+            {
+              "type": "measure",
+              "table": "Medidas",
+              "name": "Faturamento"
+            },
+            {
+              "type": "measure",
+              "table": "Medidas",
+              "name": "Faturamento LY"
+            },
+            {
+              "type": "measure",
+              "table": "Medidas",
+              "name": "Acima da Meta"
+            },
+            {
+              "type": "measure",
+              "table": "Medidas",
+              "name": "Atendimentos"
+            },
+            {
+              "type": "measure",
+              "table": "Medidas",
+              "name": "Até a Meta"
+            }
+          ],
+          "position": {
+            "colSpan": 12,
+            "rowSpan": 2
+          }
+        }
+      ]
+    }
+  },
+  "activeTheme": {
+    "name": "Modern Minimalist",
+    "dataColors": [
+      "#4F46E5",
+      "#06B6D4",
+      "#10B981",
+      "#F59E0B",
+      "#8B5CF6",
+      "#EC4899",
+      "#3B82F6",
+      "#14B8A6"
+    ],
+    "background": "#F8FAFC",
+    "foreground": "#0F172A",
+    "tableAccent": "#4F46E5",
+    "visualStyles": {
+      "*": {
+        "*": {
+          "card": [
+            {
+              "backgroundColor": {
+                "solid": {
+                  "color": "#FFFFFF"
+                }
+              },
+              "border": {
+                "show": true,
+                "color": "#E2E8F0",
+                "radius": 12
+              }
+            }
+          ],
+          "title": [
+            {
+              "fontSize": 14,
+              "fontFamily": "Inter, Segoe UI",
+              "color": "#1E293B",
+              "bold": true
+            }
+          ],
+          "labels": [
+            {
+              "fontSize": 11,
+              "fontFamily": "Inter, Segoe UI",
+              "color": "#64748B"
+            }
+          ]
+        }
+      }
+    }
+  },
+  "metadata": {
+    "generator": "report-builder-agent",
+    "version": "1.0.0",
+    "mode": "LiveConnection"
+  }
+}

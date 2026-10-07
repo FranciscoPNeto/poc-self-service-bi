@@ -1,0 +1,335 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Power BI / Fabric Executive Apps Studio</title>
+  <link rel="stylesheet" href="index.css">
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body>
+  <!-- Top Fabric Suite Command Bar -->
+  <header class="fabric-app-bar">
+    <div class="fabric-brand">
+      <div class="fabric-logo">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none">
+          <rect x="3" y="10" width="4" height="11" rx="1" fill="#F2C811"/>
+          <rect x="10" y="5" width="4" height="16" rx="1" fill="#F2C811"/>
+          <rect x="17" y="1" width="4" height="20" rx="1" fill="#F2C811"/>
+        </svg>
+      </div>
+      <div class="fabric-app-title">
+        <span>Fabric Apps &bull; Executive Studio</span>
+        <span class="fabric-app-badge">Multi-Dataset Canvas</span>
+      </div>
+    </div>
+
+    <div class="fabric-command-bar">
+      <!-- Alternador de Tema Dark / Light -->
+      <button class="btn-fluent btn-outline" id="btn-toggle-theme" title="Alternar entre Modo Claro e Escuro">
+        <svg id="theme-icon" class="icon-svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
+        </svg>
+        <span id="theme-btn-text">Modo Escuro</span>
+      </button>
+
+      <!-- Menu de Atualização / Refresh -->
+      <div class="fabric-dropdown-wrapper" id="dropdown-refresh-wrapper">
+        <button class="btn-fluent btn-outline" id="btn-refresh-menu" title="Opções de Atualização">
+          <svg class="icon-svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <polyline points="23 4 23 10 17 10"></polyline>
+            <polyline points="1 20 1 14 7 14"></polyline>
+            <path d="M3.51 9a9 9 0 0 1 14.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0 0 20.49 15"></path>
+          </svg>
+          <span>Atualizar</span>
+          <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"></polyline></svg>
+        </button>
+        <div class="fabric-dropdown-menu" id="dropdown-refresh-menu">
+          <button class="dropdown-item" id="btn-refresh-visuals">
+            <svg class="icon-svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M21.5 2v6h-6M21.34 15.57a10 10 0 1 1-.57-8.38l5.67-5.67"></path>
+            </svg>
+            <div>
+              <div class="dropdown-item-title">Atualizar Visuais</div>
+              <div class="dropdown-item-desc">Recarrega e redesenha todos os gráficos da página</div>
+            </div>
+          </button>
+          <button class="dropdown-item" id="btn-refresh-semantic-models">
+            <svg class="icon-svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <ellipse cx="12" cy="5" rx="9" ry="3"></ellipse>
+              <path d="M21 12c0 1.66-4 3-9 3s-9-1.34-9-3"></path>
+              <path d="M3 5v14c0 1.66 4 3 9 3s9-1.34 9-3V5"></path>
+            </svg>
+            <div>
+              <div class="dropdown-item-title">Atualizar Modelo Semântico</div>
+              <div class="dropdown-item-desc">Sincroniza TMDL (tabelas, medidas DAX e colunas) via Fabric</div>
+            </div>
+          </button>
+          <div class="dropdown-divider"></div>
+          <button class="dropdown-item" id="btn-refresh-all">
+            <svg class="icon-svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon>
+            </svg>
+            <div>
+              <div class="dropdown-item-title">Atualização Completa</div>
+              <div class="dropdown-item-desc">Sincroniza modelos e atualiza todos os visuais</div>
+            </div>
+          </button>
+        </div>
+      </div>
+
+      <!-- Gerenciamento de Templates de Metadados -->
+      <button class="btn-fluent btn-outline" id="btn-export-template" title="Exportar metadados do relatório como arquivo JSON reutilizável">
+        <svg class="icon-svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="7 10 12 15 17 10"></polyline><line x1="12" y1="15" x2="12" y2="3"></line></svg>
+        Baixar Template
+      </button>
+
+      <button class="btn-fluent btn-outline" id="btn-open-templates-modal" title="Carregar template de layout salvo">
+        <svg class="icon-svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="17 8 12 3 7 8"></polyline><line x1="12" y1="3" x2="12" y2="15"></line></svg>
+        Templates
+      </button>
+
+      <input type="file" id="inp-import-template-file" accept=".json" style="display:none;">
+
+      <button class="btn-fluent btn-outline" id="btn-save-pages" title="Salvar estado atual das páginas">
+        <svg class="icon-svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"></path><polyline points="17 21 17 13 7 13 7 21"></polyline><polyline points="7 3 7 8 15 8"></polyline></svg>
+        Salvar Alterações
+      </button>
+      <button class="btn-fluent btn-outline" id="btn-open-add-dataset">
+        <svg class="icon-svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg>
+        Adicionar Dataset
+      </button>
+      <button class="btn-fluent btn-outline" id="btn-view-definition">
+        <svg class="icon-svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline><line x1="16" y1="13" x2="8" y2="13"></line><line x1="16" y1="17" x2="8" y2="17"></line></svg>
+        Definição PBIR
+      </button>
+      <button class="btn-fluent btn-primary" id="btn-export-fabric-report">
+        <svg class="icon-svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"></polygon></svg>
+        Publicar Relatório
+      </button>
+    </div>
+  </header>
+
+  <!-- Workspace Principal de Criação -->
+  <div class="fabric-workspace">
+    <!-- Left Panel: Fields & Multi-Dataset Catalog com Scroll Completo -->
+    <aside class="fabric-pane-left">
+      <div class="pane-section-header">
+        <div style="display:flex; align-items:center; gap:6px;">
+          <span class="pane-section-title">Dados & Modelos</span>
+          <button class="btn-icon" id="btn-quick-refresh-schemas" title="Atualizar modelos semânticos do Fabric" style="width:20px; height:20px;">
+            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <polyline points="23 4 23 10 17 10"></polyline>
+              <polyline points="1 20 1 14 7 14"></polyline>
+              <path d="M3.51 9a9 9 0 0 1 14.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0 0 20.49 15"></path>
+            </svg>
+          </button>
+        </div>
+        <span class="badge-subtle" id="total-datasets-badge">2 Datasets</span>
+      </div>
+
+      <div class="pane-instruction">
+        Arraste campos para a tela ou clique no ícone <strong>+</strong> para adicionar um visual instantâneo.
+      </div>
+
+      <div id="dataset-fields-container">
+        <!-- Datasets e seus campos para arrastar com scroll funcional -->
+      </div>
+    </aside>
+
+    <!-- Center Canvas: Active Page Dashboard -->
+    <main class="fabric-canvas-area" id="canvas-area">
+      <!-- Drop Zone para novos visuais -->
+      <div class="canvas-dropzone" id="canvas-dropzone">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="17 8 12 3 7 8"></polyline><line x1="12" y1="3" x2="12" y2="15"></line></svg>
+        <div style="font-weight:600; color:var(--fabric-text-primary);">Solte um campo aqui para criar um visual</div>
+        <div style="font-size: 11px; color: var(--fabric-text-tertiary);">O visual utilizará o formato selecionado no painel à direita</div>
+      </div>
+
+      <!-- Grid com os visuais da página ativa -->
+      <div class="visuals-container-grid" id="visuals-container-grid">
+        <!-- Renderizado dinamicamente via JS -->
+      </div>
+    </main>
+
+    <!-- Right Panel: Visualizations Picker & Formatter (Estilo Power BI) -->
+    <aside class="fabric-pane-right">
+      <div class="pane-section-header">
+        <span class="pane-section-title">Visualizações</span>
+      </div>
+
+      <div style="padding: 10px 14px 4px 14px; font-size: 11px; color: var(--fabric-text-secondary); font-weight:500;">
+        Tipo padrão para novos visuais:
+      </div>
+
+      <div class="visual-types-grid" id="visual-types-picker">
+        <div class="visual-type-btn active" data-type="kpi" title="Cartão de KPI (Métrica única)">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2"></rect><path d="M7 10h10M7 14h6"></path></svg>
+          <span>Cartão</span>
+        </div>
+        <div class="visual-type-btn" data-type="bar" title="Gráfico de Colunas / Barras">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="20" x2="18" y2="4"></line><line x1="6" y1="20" x2="6" y2="14"></line><line x1="12" y1="20" x2="12" y2="10"></line></svg>
+          <span>Barras</span>
+        </div>
+        <div class="visual-type-btn" data-type="line" title="Gráfico de Linhas Temporal">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"></polyline></svg>
+          <span>Linhas</span>
+        </div>
+        <div class="visual-type-btn" data-type="donut" title="Gráfico de Rosca / Proporção">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"></circle><circle cx="12" cy="12" r="4"></circle></svg>
+          <span>Rosca</span>
+        </div>
+        <div class="visual-type-btn" data-type="area" title="Gráfico de Área Preenchida">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 20h18L17 7 11 15 7 10 3 20z"></path></svg>
+          <span>Área</span>
+        </div>
+        <div class="visual-type-btn" data-type="table" title="Tabela Analítica">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2"></rect><line x1="3" y1="9" x2="21" y2="9"></line><line x1="9" y1="21" x2="9" y2="9"></line></svg>
+          <span>Tabela</span>
+        </div>
+      </div>
+
+      <!-- Seção de Personalização do Visual Selecionado (Formatação) -->
+      <div id="visual-customizer-panel" style="display:none;" class="format-property-group">
+        <div class="format-label">Personalizar Visual Selecionado:</div>
+        
+        <div>
+          <label class="format-label" style="font-weight:normal; font-size:10px;">Título do Visual:</label>
+          <input type="text" id="inp-custom-title" class="format-input">
+        </div>
+
+        <div>
+          <label class="format-label" style="font-weight:normal; font-size:10px;">Largura do Card (Grid):</label>
+          <select id="sel-custom-width" class="format-input">
+            <option value="3">Pequeno (1/4 da tela)</option>
+            <option value="4">Médio (1/3 da tela)</option>
+            <option value="6">Grande (Metade da tela)</option>
+            <option value="12">Completo (Largura total)</option>
+          </select>
+        </div>
+
+        <div>
+          <label class="format-label" style="font-weight:normal; font-size:10px;">Cor de Destaque:</label>
+          <div class="color-presets-row" id="color-presets-container">
+            <div class="color-preset-dot" style="background:#0078D4;" data-color="#0078D4"></div>
+            <div class="color-preset-dot" style="background:#107C41;" data-color="#107C41"></div>
+            <div class="color-preset-dot" style="background:#5C2D91;" data-color="#5C2D91"></div>
+            <div class="color-preset-dot" style="background:#D83B01;" data-color="#D83B01"></div>
+            <div class="color-preset-dot" style="background:#008272;" data-color="#008272"></div>
+            <div class="color-preset-dot" style="background:#B4009E;" data-color="#B4009E"></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Gerenciamento da Página Ativa -->
+      <div style="padding: 14px; border-top: 1px solid var(--fabric-border); margin-top: auto; background: var(--fabric-neutral-lighter);">
+        <div style="font-size: 11px; font-weight: 600; color: var(--fabric-text-secondary); margin-bottom: 6px;">Página Ativa:</div>
+        <input type="text" id="inp-active-page-name" class="format-input">
+        <div style="margin-top: 8px;">
+          <button class="btn-fluent btn-outline btn-sm" id="btn-delete-active-page" style="width: 100%; color: #D13438; border-color: var(--fabric-border-subtle);">Excluir Página Atual</button>
+        </div>
+      </div>
+    </aside>
+  </div>
+
+  <!-- Bottom Page Navigation Bar (Abas de Página estilo Power BI) -->
+  <footer class="powerbi-page-bar" id="page-bar">
+    <div id="page-tabs-container" style="display:flex; align-items:center; gap:4px;">
+      <!-- Abas de página -->
+    </div>
+    <button class="btn-add-page" id="btn-add-new-page" title="Adicionar nova página">
+      <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg>
+    </button>
+  </footer>
+
+  <!-- Modal: Gerenciador de Templates -->
+  <div class="modal-overlay" id="modal-templates">
+    <div class="fluent-dialog" style="max-width: 600px;">
+      <div class="dialog-header">
+        <h3>Biblioteca de Templates de Relatório</h3>
+        <button style="border:none; background:none; font-size:16px; cursor:pointer;" id="modal-templates-close">&times;</button>
+      </div>
+      <div class="dialog-body">
+        <p style="font-size:12px; color:var(--fabric-text-secondary); margin-bottom:12px;">
+          Templates armazenam apenas a arquitetura, estrutura de páginas e configurações visuais (Live Connection sem expor dados confidenciais).
+        </p>
+
+        <div style="display:flex; gap:8px; margin-bottom:14px;">
+          <input type="text" id="inp-save-template-name" placeholder="Nome do novo template..." style="flex:1;">
+          <button class="btn-fluent btn-primary" id="btn-save-as-template">Salvar Atual como Template</button>
+        </div>
+
+        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:8px;">
+          <strong style="font-size:12px; color:var(--fabric-text-primary);">Templates Disponíveis no Servidor:</strong>
+          <button class="btn-fluent btn-outline" id="btn-trigger-file-import" style="font-size:11px; padding:4px 8px;">
+            <svg class="icon-svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="17 8 12 3 7 8"></polyline><line x1="12" y1="3" x2="12" y2="15"></line></svg>
+            Carregar Arquivo JSON Local
+          </button>
+        </div>
+
+        <div id="templates-list-container" style="max-height:220px; overflow-y:auto; border:1px solid var(--fabric-border); border-radius:4px; padding:8px; display:flex; flex-direction:column; gap:6px;">
+          <!-- Lista carregada via API -->
+        </div>
+      </div>
+      <div class="dialog-footer">
+        <button class="btn-fluent btn-outline" id="modal-templates-ok">Fechar</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Modal: Adicionar Novo Dataset -->
+  <div class="modal-overlay" id="modal-add-ds">
+    <div class="fluent-dialog">
+      <div class="dialog-header">
+        <h3>Adicionar Dataset ao Catálogo Executivo</h3>
+        <button style="border:none; background:none; font-size:16px; cursor:pointer;" id="modal-add-close">&times;</button>
+      </div>
+      <div class="dialog-body">
+        <div class="fluent-input-group">
+          <label>Nome do Modelo Semântico</label>
+          <input type="text" id="inp-ds-name" placeholder="Ex: Finanças Corporativas 2026">
+        </div>
+        <div class="fluent-input-group">
+          <label>Workspace ID (GUID)</label>
+          <input type="text" id="inp-ds-wid" value="5015771e-8558-4bd6-8392-b70bf61d7b15">
+        </div>
+        <div class="fluent-input-group">
+          <label>Semantic Model / Item ID (GUID)</label>
+          <input type="text" id="inp-ds-id" placeholder="xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx">
+        </div>
+        <div class="fluent-input-group">
+          <label>Descrição / Finalidade</label>
+          <textarea id="inp-ds-desc" rows="2" placeholder="Descreva os dados contemplados..."></textarea>
+        </div>
+      </div>
+      <div class="dialog-footer">
+        <button class="btn-fluent btn-outline" id="modal-add-cancel">Cancelar</button>
+        <button class="btn-fluent btn-primary" id="modal-add-save">Adicionar ao Catálogo</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Modal: Ver PBIR Definition -->
+  <div class="modal-overlay" id="modal-definition">
+    <div class="fluent-dialog" style="max-width: 680px;">
+      <div class="dialog-header">
+        <h3>Definição PBIR Multi-Páginas (Fabric App)</h3>
+        <button style="border:none; background:none; font-size:16px; cursor:pointer;" id="modal-def-close">&times;</button>
+      </div>
+      <div class="dialog-body">
+        <pre id="def-json-view" style="background:var(--fabric-neutral-lighter); border:1px solid var(--fabric-border); padding:12px; border-radius:4px; font-size:12px; font-family:Consolas, monospace; max-height:360px; overflow-y:auto; color:var(--fabric-text-primary);"></pre>
+      </div>
+      <div class="dialog-footer">
+        <button class="btn-fluent btn-outline" id="modal-def-ok">Fechar</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Toast -->
+  <div class="fabric-toast" id="fabric-toast">
+    <span id="toast-text">Notificação</span>
+  </div>
+
+  <script src="app.js"></script>
+</body>
+</html>

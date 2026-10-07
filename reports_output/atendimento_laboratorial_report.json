@@ -1,0 +1,232 @@
+{
+  "reportDefinition": {
+    "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/1.0.0/schema.json",
+    "theme": "Modern Minimalist",
+    "report": {
+      "title": "Dashboard Laboratorial - Atendimentos & Faturamento",
+      "dataset": {
+        "workspaceId": "5015771e-8558-4bd6-8392-b70bf61d7b15",
+        "datasetId": "8195add5-dc47-4ad3-a3f7-78943b9ce122",
+        "datasetName": "Atendimento Laboratorial",
+        "connectionMode": "LiveConnection"
+      },
+      "layout": {
+        "columns": 12,
+        "gap": "16px"
+      },
+      "visuals": [
+        {
+          "id": "kpi_card_1",
+          "type": "kpiCard",
+          "title": "Faturamento",
+          "field": {
+            "table": "Medidas",
+            "measure": "Faturamento",
+            "dax": "[Faturamento]"
+          },
+          "position": {
+            "colSpan": 3,
+            "rowSpan": 1
+          },
+          "formatting": {
+            "showTitle": true,
+            "accentColor": "#6366f1"
+          }
+        },
+        {
+          "id": "kpi_card_2",
+          "type": "kpiCard",
+          "title": "Atendimentos",
+          "field": {
+            "table": "Medidas",
+            "measure": "Atendimentos",
+            "dax": "[Atendimentos]"
+          },
+          "position": {
+            "colSpan": 3,
+            "rowSpan": 1
+          },
+          "formatting": {
+            "showTitle": true,
+            "accentColor": "#6366f1"
+          }
+        },
+        {
+          "id": "kpi_card_3",
+          "type": "kpiCard",
+          "title": "Meta Faturamento",
+          "field": {
+            "table": "Medidas",
+            "measure": "Meta Faturamento",
+            "dax": "[Meta Faturamento]"
+          },
+          "position": {
+            "colSpan": 3,
+            "rowSpan": 1
+          },
+          "formatting": {
+            "showTitle": true,
+            "accentColor": "#6366f1"
+          }
+        },
+        {
+          "id": "kpi_card_4",
+          "type": "kpiCard",
+          "title": "Atingimento de meta",
+          "field": {
+            "table": "Medidas",
+            "measure": "Atingimento de meta",
+            "dax": "[Atingimento de meta]"
+          },
+          "position": {
+            "colSpan": 3,
+            "rowSpan": 1
+          },
+          "formatting": {
+            "showTitle": true,
+            "accentColor": "#6366f1"
+          }
+        },
+        {
+          "id": "chart_trend_5",
+          "type": "lineChart",
+          "title": "Evolução Temporal: Faturamento por NomeMes",
+          "xAxis": {
+            "table": "Calendario",
+            "column": "NomeMes"
+          },
+          "yAxis": [
+            {
+              "table": "Medidas",
+              "measure": "Faturamento"
+            }
+          ],
+          "position": {
+            "colSpan": 8,
+            "rowSpan": 2
+          }
+        },
+        {
+          "id": "chart_cat_6",
+          "type": "barChart",
+          "title": "Distribuição por Convênio",
+          "categoryAxis": {
+            "table": "Convenio",
+            "column": "Convênio"
+          },
+          "values": [
+            {
+              "table": "Medidas",
+              "measure": "Faturamento"
+            },
+            {
+              "table": "Medidas",
+              "measure": "Atendimentos"
+            }
+          ],
+          "position": {
+            "colSpan": 4,
+            "rowSpan": 2
+          }
+        },
+        {
+          "id": "table_detail_7",
+          "type": "matrixTable",
+          "title": "Visão Analítica Detalhada",
+          "columns": [
+            {
+              "type": "dimension",
+              "table": "Calendario",
+              "name": "NomeMes"
+            },
+            {
+              "type": "dimension",
+              "table": "Convenio",
+              "name": "Convênio"
+            },
+            {
+              "type": "measure",
+              "table": "Medidas",
+              "name": "Faturamento"
+            },
+            {
+              "type": "measure",
+              "table": "Medidas",
+              "name": "Atendimentos"
+            },
+            {
+              "type": "measure",
+              "table": "Medidas",
+              "name": "Meta Faturamento"
+            },
+            {
+              "type": "measure",
+              "table": "Medidas",
+              "name": "Atingimento de meta"
+            }
+          ],
+          "position": {
+            "colSpan": 12,
+            "rowSpan": 2
+          }
+        }
+      ]
+    }
+  },
+  "activeTheme": {
+    "name": "Modern Minimalist",
+    "dataColors": [
+      "#4F46E5",
+      "#06B6D4",
+      "#10B981",
+      "#F59E0B",
+      "#8B5CF6",
+      "#EC4899",
+      "#3B82F6",
+      "#14B8A6"
+    ],
+    "background": "#F8FAFC",
+    "foreground": "#0F172A",
+    "tableAccent": "#4F46E5",
+    "visualStyles": {
+      "*": {
+        "*": {
+          "card": [
+            {
+              "backgroundColor": {
+                "solid": {
+                  "color": "#FFFFFF"
+                }
+              },
+              "border": {
+                "show": true,
+                "color": "#E2E8F0",
+                "radius": 12
+              }
+            }
+          ],
+          "title": [
+            {
+              "fontSize": 14,
+              "fontFamily": "Inter, Segoe UI",
+              "color": "#1E293B",
+              "bold": true
+            }
+          ],
+          "labels": [
+            {
+              "fontSize": 11,
+              "fontFamily": "Inter, Segoe UI",
+              "color": "#64748B"
+            }
+          ]
+        }
+      }
+    }
+  },
+  "metadata": {
+    "generator": "report-builder-agent",
+    "version": "1.0.0",
+    "mode": "LiveConnection"
+  }
+}

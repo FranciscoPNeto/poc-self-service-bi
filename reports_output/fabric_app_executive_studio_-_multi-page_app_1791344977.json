@@ -1,0 +1,281 @@
+{
+  "reportDefinition": {
+    "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/1.0.0/schema.json",
+    "theme": "Fabric Modern Clean",
+    "style": "PowerBI_FabricApp_Clean",
+    "report": {
+      "title": "Executive Studio - Multi-Page App",
+      "architecture": "MultiDatasetHub",
+      "datasets": [
+        {
+          "workspaceId": "5015771e-8558-4bd6-8392-b70bf61d7b15",
+          "datasetId": "8195add5-dc47-4ad3-a3f7-78943b9ce122",
+          "datasetName": "Atendimento Laboratorial",
+          "connectionMode": "LiveConnection"
+        },
+        {
+          "workspaceId": "5015771e-8558-4bd6-8392-b70bf61d7b15",
+          "datasetId": "1a743416-65a2-4685-ba14-719429802c41",
+          "datasetName": "Infotransito Recife",
+          "connectionMode": "LiveConnection"
+        }
+      ],
+      "pages": [
+        {
+          "id": "page_overview",
+          "name": "Visão Executiva Geral",
+          "visuals": [
+            {
+              "id": "v1",
+              "type": "kpi",
+              "title": "Métrica Customizada Teste",
+              "dataset": {
+                "datasetId": "8195add5-dc47-4ad3-a3f7-78943b9ce122",
+                "datasetName": "Atendimento Laboratorial"
+              },
+              "field": {
+                "table": "Medidas",
+                "measure": "Faturamento",
+                "dimension": null,
+                "dax": "[Medidas].[Faturamento]"
+              },
+              "config": {
+                "chartType": "kpi",
+                "color": "#5C2D91",
+                "colSpan": 3
+              }
+            },
+            {
+              "id": "v2",
+              "type": "kpi",
+              "title": "Total Atendimentos",
+              "dataset": {
+                "datasetId": "8195add5-dc47-4ad3-a3f7-78943b9ce122",
+                "datasetName": "Atendimento Laboratorial"
+              },
+              "field": {
+                "table": "Medidas",
+                "measure": "Atendimentos",
+                "dimension": null,
+                "dax": "[Medidas].[Atendimentos]"
+              },
+              "config": {
+                "chartType": "kpi",
+                "color": "#0078D4",
+                "colSpan": 3
+              }
+            },
+            {
+              "id": "v3",
+              "type": "kpi",
+              "title": "Sinistros de Trânsito",
+              "dataset": {
+                "datasetId": "1a743416-65a2-4685-ba14-719429802c41",
+                "datasetName": "Infotransito Recife"
+              },
+              "field": {
+                "table": "Medidas",
+                "measure": "QTD de acidentes",
+                "dimension": null,
+                "dax": "[Medidas].[QTD de acidentes]"
+              },
+              "config": {
+                "chartType": "kpi",
+                "color": "#107C41",
+                "colSpan": 3
+              }
+            },
+            {
+              "id": "v4",
+              "type": "kpi",
+              "title": "Média Acidentes / Dia",
+              "dataset": {
+                "datasetId": "1a743416-65a2-4685-ba14-719429802c41",
+                "datasetName": "Infotransito Recife"
+              },
+              "field": {
+                "table": "Medidas",
+                "measure": "Media_Acidentes_Por_Dia",
+                "dimension": null,
+                "dax": "[Medidas].[Media_Acidentes_Por_Dia]"
+              },
+              "config": {
+                "chartType": "kpi",
+                "color": "#107C41",
+                "colSpan": 3
+              }
+            },
+            {
+              "id": "v5",
+              "type": "bar",
+              "title": "Faturamento por Mês (Laboratório)",
+              "dataset": {
+                "datasetId": "8195add5-dc47-4ad3-a3f7-78943b9ce122",
+                "datasetName": "Atendimento Laboratorial"
+              },
+              "field": {
+                "table": "Medidas",
+                "measure": "Faturamento",
+                "dimension": "NomeMes",
+                "dax": "[Medidas].[Faturamento]"
+              },
+              "config": {
+                "chartType": "bar",
+                "color": "#0078D4",
+                "colSpan": 6
+              }
+            },
+            {
+              "id": "v6",
+              "type": "line",
+              "title": "Ocorrências por Bairro (Trânsito)",
+              "dataset": {
+                "datasetId": "1a743416-65a2-4685-ba14-719429802c41",
+                "datasetName": "Infotransito Recife"
+              },
+              "field": {
+                "table": "Medidas",
+                "measure": "QTD de acidentes",
+                "dimension": "bairro",
+                "dax": "[Medidas].[QTD de acidentes]"
+              },
+              "config": {
+                "chartType": "line",
+                "color": "#B4009E",
+                "colSpan": 4
+              }
+            }
+          ]
+        },
+        {
+          "id": "page_health",
+          "name": "Detalhamento Laboratório",
+          "visuals": [
+            {
+              "id": "vh1",
+              "type": "kpi",
+              "title": "Meta Faturamento",
+              "dataset": {
+                "datasetId": "8195add5-dc47-4ad3-a3f7-78943b9ce122",
+                "datasetName": "Atendimento Laboratorial"
+              },
+              "field": {
+                "table": "Medidas",
+                "measure": "Meta Faturamento",
+                "dimension": null,
+                "dax": "[Medidas].[Meta Faturamento]"
+              },
+              "config": {
+                "chartType": "kpi",
+                "color": "#0078D4",
+                "colSpan": 3
+              }
+            },
+            {
+              "id": "vh2",
+              "type": "kpi",
+              "title": "Atingimento de Meta",
+              "dataset": {
+                "datasetId": "8195add5-dc47-4ad3-a3f7-78943b9ce122",
+                "datasetName": "Atendimento Laboratorial"
+              },
+              "field": {
+                "table": "Medidas",
+                "measure": "Atingimento de meta",
+                "dimension": null,
+                "dax": "[Medidas].[Atingimento de meta]"
+              },
+              "config": {
+                "chartType": "kpi",
+                "color": "#0078D4",
+                "colSpan": 3
+              }
+            },
+            {
+              "id": "vh3",
+              "type": "donut",
+              "title": "Distribuição por Convênio",
+              "dataset": {
+                "datasetId": "8195add5-dc47-4ad3-a3f7-78943b9ce122",
+                "datasetName": "Atendimento Laboratorial"
+              },
+              "field": {
+                "table": "Medidas",
+                "measure": "Faturamento",
+                "dimension": "Convênio",
+                "dax": "[Medidas].[Faturamento]"
+              },
+              "config": {
+                "chartType": "donut",
+                "color": "#0078D4",
+                "colSpan": 6
+              }
+            }
+          ]
+        }
+      ]
+    }
+  },
+  "activeTheme": {
+    "name": "Fabric Modern Clean",
+    "dataColors": [
+      "#0078D4",
+      "#107C41",
+      "#5C2D91",
+      "#D83B01",
+      "#008272",
+      "#B4009E",
+      "#004E8C",
+      "#498205"
+    ],
+    "background": "#F0F2F5",
+    "foreground": "#201F1E",
+    "tableAccent": "#0078D4",
+    "visualStyles": {
+      "*": {
+        "*": {
+          "card": [
+            {
+              "backgroundColor": {
+                "solid": {
+                  "color": "#FFFFFF"
+                }
+              },
+              "border": {
+                "show": true,
+                "color": "#E1DFDD",
+                "radius": 6
+              },
+              "dropShadow": {
+                "show": true,
+                "color": "rgba(0,0,0,0.04)",
+                "blur": 8
+              }
+            }
+          ],
+          "title": [
+            {
+              "fontSize": 12,
+              "fontFamily": "Segoe UI, -apple-system, sans-serif",
+              "color": "#605E5C",
+              "bold": false
+            }
+          ],
+          "labels": [
+            {
+              "fontSize": 24,
+              "fontFamily": "Segoe UI Semibold, -apple-system, sans-serif",
+              "color": "#201F1E"
+            }
+          ]
+        }
+      }
+    }
+  },
+  "metadata": {
+    "generator": "report-builder-agent",
+    "concept": "Microsoft Fabric App Multi-Dataset",
+    "version": "2.0.0",
+    "mode": "LiveConnection"
+  }
+}

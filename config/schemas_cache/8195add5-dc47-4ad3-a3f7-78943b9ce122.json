@@ -1,0 +1,114 @@
+{
+  "workspaceId": "5015771e-8558-4bd6-8392-b70bf61d7b15",
+  "datasetId": "8195add5-dc47-4ad3-a3f7-78943b9ce122",
+  "tables": [
+    "Convenio",
+    "Procedimento",
+    "Recepcionista",
+    "Atendimento",
+    "Calendario",
+    "Medidas",
+    "Hora"
+  ],
+  "measures": [
+    {
+      "table": "Medidas",
+      "measure": "Faturamento"
+    },
+    {
+      "table": "Medidas",
+      "measure": "Atendimentos"
+    },
+    {
+      "table": "Medidas",
+      "measure": "Faturamento LY"
+    },
+    {
+      "table": "Medidas",
+      "measure": "Acima da Meta"
+    },
+    {
+      "table": "Medidas",
+      "measure": "Até a Meta"
+    },
+    {
+      "table": "Medidas",
+      "measure": "Atingimento de meta"
+    },
+    {
+      "table": "Medidas",
+      "measure": "Atingimento de meta comp."
+    },
+    {
+      "table": "Medidas",
+      "measure": "Meta até Mês Atual"
+    },
+    {
+      "table": "Medidas",
+      "measure": "Texto"
+    },
+    {
+      "table": "Medidas",
+      "measure": "Meta Atendimentos"
+    },
+    {
+      "table": "Medidas",
+      "measure": "Meta Faturamento"
+    }
+  ],
+  "columnsByTable": {
+    "Convenio": [
+      "ID Convênio",
+      "Convênio"
+    ],
+    "Procedimento": [
+      "ID Procedimento",
+      "Procedimento"
+    ],
+    "Recepcionista": [
+      "ID Recepcionista",
+      "Recepcionista"
+    ],
+    "Atendimento": [
+      "Data",
+      "Hora",
+      "ID Atendimento",
+      "ID Paciente",
+      "Qtde Item",
+      "Valor",
+      "ID Convênio",
+      "ID Procedimento",
+      "ID Recepcionista"
+    ],
+    "Calendario": [
+      "Ano",
+      "Data",
+      "NomeMes",
+      "MesAbre",
+      "MesAno",
+      "MesNum",
+      "AnoMesINT",
+      "Trimestre",
+      "TrimestreAbreviado",
+      "Bimestre",
+      "Semestre",
+      "Semana",
+      "DiaSemana",
+      "NomeDia"
+    ],
+    "Medidas": [
+      "Coluna 1"
+    ],
+    "Hora": [
+      "Hora",
+      "Hora Num",
+      "Minuto Num",
+      "Segundo Num",
+      "AMPM",
+      "Hora AMPM",
+      "Período",
+      "Período Ordem",
+      "Faixa Hora"
+    ]
+  }
+}

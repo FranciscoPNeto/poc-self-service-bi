@@ -1,0 +1,192 @@
+{
+  "workspaceId": "5015771e-8558-4bd6-8392-b70bf61d7b15",
+  "datasetId": "1a743416-65a2-4685-ba14-719429802c41",
+  "tables": [
+    "Medidas",
+    "Dcalendario",
+    "public dim_bairros",
+    "AcidentesRecife2023_2024"
+  ],
+  "measures": [
+    {
+      "table": "Medidas",
+      "measure": "QTD de acidentes"
+    },
+    {
+      "table": "Medidas",
+      "measure": "QTD_Acidentes_2024"
+    },
+    {
+      "table": "Medidas",
+      "measure": "QTD_Acidentes_2023"
+    },
+    {
+      "table": "Medidas",
+      "measure": "qtd protocolo"
+    },
+    {
+      "table": "Medidas",
+      "measure": "Media_Acidentes_Por_Dia"
+    },
+    {
+      "table": "Medidas",
+      "measure": "Media_Acidentes_Por_Mes"
+    },
+    {
+      "table": "Medidas",
+      "measure": "qtd_acidentes_com_vitima"
+    },
+    {
+      "table": "Medidas",
+      "measure": "qtd_acidentes_sem_vitima"
+    },
+    {
+      "table": "Medidas",
+      "measure": "qtd_acidentes_com_vitima_fatal"
+    },
+    {
+      "table": "Medidas",
+      "measure": "Media_Acidentes_Por_Trimestre"
+    },
+    {
+      "table": "Medidas",
+      "measure": "qtd_acidentes_auto"
+    },
+    {
+      "table": "Medidas",
+      "measure": "qtd_acidentes_moto"
+    },
+    {
+      "table": "Medidas",
+      "measure": "qtd_acidentes_ciclista"
+    },
+    {
+      "table": "Medidas",
+      "measure": "qtd_acidentes_onibus"
+    },
+    {
+      "table": "Medidas",
+      "measure": "qtd_acidentes_caminhao"
+    },
+    {
+      "table": "Medidas",
+      "measure": "qtd_acidentes_vitimas_fatais"
+    },
+    {
+      "table": "Medidas",
+      "measure": "Ranking_Bairros_com_Mais_Acidentes"
+    },
+    {
+      "table": "Medidas",
+      "measure": "Motos_soma"
+    },
+    {
+      "table": "Medidas",
+      "measure": "Carro_soma"
+    },
+    {
+      "table": "Medidas",
+      "measure": "Caminhao_soma"
+    },
+    {
+      "table": "Medidas",
+      "measure": "Bicicletas_soma"
+    },
+    {
+      "table": "Medidas",
+      "measure": "qtd_de_vitimas_"
+    },
+    {
+      "table": "Medidas",
+      "measure": "Ranking_Feriado_com_Mais_Acidentes"
+    },
+    {
+      "table": "Medidas",
+      "measure": "Onibus_soma"
+    },
+    {
+      "table": "Medidas",
+      "measure": "QTD de Colisao_frontal"
+    },
+    {
+      "table": "Medidas",
+      "measure": "QTD de Colisao_Lateral"
+    },
+    {
+      "table": "Medidas",
+      "measure": "QTD de Atropelamento_de_Pessoa"
+    },
+    {
+      "table": "Medidas",
+      "measure": "QTD de Colisao_Traseira"
+    },
+    {
+      "table": "Medidas",
+      "measure": "QTD de CAPOTAMENTO"
+    },
+    {
+      "table": "Medidas",
+      "measure": "endenreço"
+    },
+    {
+      "table": "Medidas",
+      "measure": "Ranking_endereço_com_Mais_Acidentes"
+    },
+    {
+      "table": "Medidas",
+      "measure": "É_Top3"
+    }
+  ],
+  "columnsByTable": {
+    "Medidas": [
+      "Column"
+    ],
+    "Dcalendario": [
+      "Data",
+      "Dia",
+      "Semana",
+      "SemanaAbrev",
+      "MesNome",
+      "Trimestre",
+      "Ano",
+      "AnoMes",
+      "NomeFeriado",
+      "DiaSemanaOrdem",
+      "MesAbreviado",
+      "MesAnoAbrev",
+      "MesAnoCompleto",
+      "MesNumero"
+    ],
+    "public dim_bairros": [
+      "bairro"
+    ],
+    "AcidentesRecife2023_2024": [
+      "protocolo",
+      "data",
+      "hora",
+      "natureza",
+      "situacao",
+      "bairro",
+      "endereco",
+      "numero",
+      "detalhe_endereco_acidente",
+      "complemento",
+      "bairro_cruzamento",
+      "num_semaforo",
+      "sentido_via",
+      "tipo",
+      "auto",
+      "moto",
+      "ciclom",
+      "ciclista",
+      "pedestre",
+      "onibus",
+      "caminhao",
+      "viatura",
+      "outros",
+      "vitimas",
+      "vitimas_fatais",
+      "EnderecoCompleto"
+    ]
+  }
+}
