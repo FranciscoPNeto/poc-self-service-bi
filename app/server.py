@@ -594,5 +594,11 @@ def run_server(port=8080):
         pass
 
 if __name__ == "__main__":
-    port = int(sys.argv[1]) if len(sys.argv) > 1 else 8080
+    port_env = os.environ.get("PORT")
+    if port_env:
+        port = int(port_env)
+    elif len(sys.argv) > 1:
+        port = int(sys.argv[1])
+    else:
+        port = 8080
     run_server(port)
