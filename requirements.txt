@@ -1,0 +1,6 @@
+# Dependências para produção e testes do PoC Self-Service BI
+# O servidor core utiliza primariamente a biblioteca padrão do Python (http.server, urllib, json)
+
+requests>=2.31.0
+websockets>=12.0
+pyyaml>=6.0.1
