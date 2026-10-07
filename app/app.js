@@ -1019,7 +1019,7 @@ async function exportFabricReport() {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
-        reportTitle: "Executive Studio - Multi-Page App",
+        reportTitle: "Power Embedded APPS - Multi-Page App",
         theme: state.theme === 'dark' ? "Fabric Dark Modern" : "Fabric Modern Clean",
         pages: state.pages
       })
