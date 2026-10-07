@@ -64,7 +64,8 @@ const dom = {
   inpName: document.getElementById('inp-ds-name'),
   inpWid: document.getElementById('inp-ds-wid'),
   inpId: document.getElementById('inp-ds-id'),
-  inpDesc: document.getElementById('inp-ds-desc')
+  inpDesc: document.getElementById('inp-ds-desc'),
+  inpCanvasFilter: document.getElementById('inp-canvas-filter')
 };
 
 document.addEventListener('DOMContentLoaded', async () => {
@@ -193,6 +194,22 @@ function setupHandlers() {
   // Salvar e Exportar
   dom.btnSavePages.addEventListener('click', savePagesToServer);
   dom.btnExport.addEventListener('click', exportFabricReport);
+
+  // Busca / Filtro rápido no Canvas
+  if (dom.inpCanvasFilter) {
+    dom.inpCanvasFilter.addEventListener('input', (e) => {
+      const q = e.target.value.toLowerCase().trim();
+      document.querySelectorAll('.visual-card-canvas').forEach(card => {
+        const titleEl = card.querySelector('.visual-card-title');
+        const text = titleEl ? titleEl.textContent.toLowerCase() : '';
+        if (!q || text.includes(q)) {
+          card.style.display = '';
+        } else {
+          card.style.display = 'none';
+        }
+      });
+    });
+  }
 
   // Manipulação de Páginas
   dom.btnAddPage.addEventListener('click', addNewPage);
@@ -639,13 +656,13 @@ function appendSingleVisualCard(v) {
   const isSelected = state.selectedVisualId === v.id;
   const colClass = `visual-col-${v.colSpan || (v.visualType === 'kpi' ? 3 : 6)}`;
   card.className = `visual-card-canvas ${colClass} ${isSelected ? 'selected-visual' : ''}`;
-  card.style.borderTop = `3px solid ${v.color || '#0078D4'}`;
+  card.style.borderTop = `3px solid ${v.color || '#3B82F6'}`;
 
   card.innerHTML = `
     <div class="visual-card-top">
-      <div style="display:flex; align-items:center; gap:6px; overflow:hidden;">
-        <span style="font-size:10px; font-weight:600; text-transform:uppercase; padding:1px 5px; border-radius:2px; background:${v.color}15; color:${v.color}; flex-shrink:0;">
-          ${escapeHtml(v.datasetName)}
+      <div style="display:flex; align-items:center; gap:8px; overflow:hidden;">
+        <span style="font-size:10px; font-weight:700; text-transform:uppercase; padding:3px 7px; border-radius:6px; background:${v.color || '#3B82F6'}15; color:${v.color || '#3B82F6'}; flex-shrink:0;">
+          ${escapeHtml(v.datasetName || 'Dataset')}
         </span>
         <span class="visual-card-title">${escapeHtml(v.title || v.measure || v.dimension)}</span>
       </div>
@@ -659,7 +676,7 @@ function appendSingleVisualCard(v) {
           <option value="table" ${v.visualType === 'table' ? 'selected' : ''}>Tabela</option>
         </select>
         <button class="btn-icon" data-id="${v.id}" title="Excluir visual">
-          <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
+          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
         </button>
       </div>
     </div>
@@ -717,27 +734,92 @@ function renderVisualContent(v) {
 
   if (v.visualType === 'kpi') {
     const val = v.value || '14.820';
+    const isPositive = !val.includes('-') && !val.includes('0,0%');
+    const badgeText = isPositive ? '+16.36%' : '-3.21%';
+    const badgeClass = isPositive ? 'trend-badge-positive' : 'trend-badge-negative';
+    const arrow = isPositive ? '↗' : '↘';
+
     bodyEl.innerHTML = `
-      <div class="visual-kpi-body">
-        <div class="kpi-big-value">${val}</div>
-        <div class="kpi-sub-text">Live DAX: [${escapeHtml(v.table)}].[${escapeHtml(v.measure || v.dimension || 'Valor')}]</div>
+      <div class="kpi-modern-wrapper">
+        <div class="kpi-info-col">
+          <div class="kpi-big-value">${val}</div>
+          <div style="display:flex; align-items:center; gap:6px; flex-wrap:wrap;">
+            <span class="kpi-trend-pill ${badgeClass}">${arrow} ${badgeText}</span>
+            <span class="kpi-sub-text">vs. mês anterior</span>
+          </div>
+        </div>
+        <div class="kpi-sparkline-box">
+          <canvas id="spark_${v.id}" class="kpi-sparkline-canvas"></canvas>
+        </div>
       </div>
     `;
+
+    setTimeout(() => {
+      initSparklineForKpi(v, isPositive);
+    }, 20);
+
   } else if (v.visualType === 'table') {
     bodyEl.innerHTML = `
-      <div style="overflow-x:auto; max-height:170px;">
-        <table style="width:100%; border-collapse:collapse; font-size:11px; text-align:left;">
+      <div class="table-container-modern">
+        <table class="saas-modern-table">
           <thead>
-            <tr style="border-bottom:1px solid var(--fabric-border); color:var(--fabric-text-secondary);">
-              <th style="padding:5px;">Item / Entidade</th>
-              <th style="padding:5px; text-align:right;">${escapeHtml(v.measure || 'Valor')}</th>
-              <th style="padding:5px; text-align:right;">% Part.</th>
+            <tr>
+              <th>Entidade / Item</th>
+              <th>Categoria</th>
+              <th>Status</th>
+              <th style="text-align:right;">${escapeHtml(v.measure || 'Total')}</th>
+              <th style="text-align:right;">% Part.</th>
             </tr>
           </thead>
           <tbody>
-            <tr style="border-bottom:1px solid var(--fabric-border-subtle);"><td style="padding:5px;">Registro 01</td><td style="padding:5px; text-align:right;">1.420</td><td style="padding:5px; text-align:right;">34%</td></tr>
-            <tr style="border-bottom:1px solid var(--fabric-border-subtle);"><td style="padding:5px;">Registro 02</td><td style="padding:5px; text-align:right;">980</td><td style="padding:5px; text-align:right;">23%</td></tr>
-            <tr style="border-bottom:1px solid var(--fabric-border-subtle);"><td style="padding:5px;">Registro 03</td><td style="padding:5px; text-align:right;">760</td><td style="padding:5px; text-align:right;">18%</td></tr>
+            <tr>
+              <td>
+                <div class="table-cell-avatar-wrap">
+                  <div class="table-avatar" style="background: #EEF2FF; color:#4F46E5;">AD</div>
+                  <span style="font-weight:600;">Anthony Dawson</span>
+                </div>
+              </td>
+              <td><span style="color:var(--fabric-text-secondary); font-size:12px;">Vendas Corporativas</span></td>
+              <td><span class="status-badge-pill status-delivered">Entregue</span></td>
+              <td style="text-align:right; font-weight:700;">R$ 48.920</td>
+              <td style="text-align:right; color:var(--fabric-text-secondary);">38.2%</td>
+            </tr>
+            <tr>
+              <td>
+                <div class="table-cell-avatar-wrap">
+                  <div class="table-avatar" style="background: #ECFDF5; color:#059669;">BH</div>
+                  <span style="font-weight:600;">Bethany Hamilton</span>
+                </div>
+              </td>
+              <td><span style="color:var(--fabric-text-secondary); font-size:12px;">Serviços TI</span></td>
+              <td><span class="status-badge-pill status-pending">Pendente</span></td>
+              <td style="text-align:right; font-weight:700;">R$ 32.400</td>
+              <td style="text-align:right; color:var(--fabric-text-secondary);">25.3%</td>
+            </tr>
+            <tr>
+              <td>
+                <div class="table-cell-avatar-wrap">
+                  <div class="table-avatar" style="background: #FEF2F2; color:#DC2626;">MM</div>
+                  <span style="font-weight:600;">Mafalda Matias</span>
+                </div>
+              </td>
+              <td><span style="color:var(--fabric-text-secondary); font-size:12px;">Operações</span></td>
+              <td><span class="status-badge-pill status-cancelled">Cancelado</span></td>
+              <td style="text-align:right; font-weight:700;">R$ 18.150</td>
+              <td style="text-align:right; color:var(--fabric-text-secondary);">14.2%</td>
+            </tr>
+            <tr>
+              <td>
+                <div class="table-cell-avatar-wrap">
+                  <div class="table-avatar" style="background: #FFFBEB; color:#D97706;">FM</div>
+                  <span style="font-weight:600;">Freddie Mercury</span>
+                </div>
+              </td>
+              <td><span style="color:var(--fabric-text-secondary); font-size:12px;">Consultoria</span></td>
+              <td><span class="status-badge-pill status-delivered">Entregue</span></td>
+              <td style="text-align:right; font-weight:700;">R$ 28.530</td>
+              <td style="text-align:right; color:var(--fabric-text-secondary);">22.3%</td>
+            </tr>
           </tbody>
         </table>
       </div>
@@ -750,6 +832,54 @@ function renderVisualContent(v) {
   }
 }
 
+function initSparklineForKpi(v, isPositive) {
+  const cvs = document.getElementById(`spark_${v.id}`);
+  if (!cvs) return;
+
+  const sparkColor = isPositive ? '#10B981' : '#EF4444';
+  const sparkData = isPositive 
+    ? [20, 28, 22, 38, 30, 42, 39, 54, 48, 62] 
+    : [60, 52, 58, 44, 46, 38, 40, 31, 28, 22];
+
+  try {
+    new Chart(cvs, {
+      type: 'line',
+      data: {
+        labels: sparkData.map((_, i) => i),
+        datasets: [{
+          data: sparkData,
+          borderColor: sparkColor,
+          borderWidth: 2,
+          pointRadius: 0,
+          tension: 0.45,
+          fill: true,
+          backgroundColor: (context) => {
+            const chart = context.chart;
+            const { ctx, chartArea } = chart;
+            if (!chartArea) return 'transparent';
+            const gradient = ctx.createLinearGradient(0, chartArea.top, 0, chartArea.bottom);
+            gradient.addColorStop(0, `${sparkColor}35`);
+            gradient.addColorStop(1, `${sparkColor}00`);
+            return gradient;
+          }
+        }]
+      },
+      options: {
+        responsive: true,
+        maintainAspectRatio: false,
+        plugins: { legend: { display: false }, tooltip: { enabled: false } },
+        scales: {
+          x: { display: false },
+          y: { display: false }
+        },
+        elements: { line: { capBezierPoints: true } }
+      }
+    });
+  } catch (err) {
+    console.warn('Sparkline error:', err);
+  }
+}
+
 function initChartForVisual(v) {
   const cvs = document.getElementById(`canvas_${v.id}`);
   if (!cvs) return;
@@ -759,10 +889,10 @@ function initChartForVisual(v) {
   }
 
   const isDark = state.theme === 'dark';
-  const textColor = isDark ? '#B0B3B8' : '#605E5C';
-  const gridColor = isDark ? '#3A3B3C' : '#EDEBE9';
+  const textColor = isDark ? '#94A3B8' : '#64748B';
+  const gridColor = isDark ? '#334155' : '#F1F5F9';
 
-  const color = v.color || '#0078D4';
+  const baseColor = v.color || '#3B82F6';
   let chartType = v.visualType;
   let isArea = false;
   if (chartType === 'area') {
@@ -770,45 +900,83 @@ function initChartForVisual(v) {
     isArea = true;
   }
 
-  let labels = ['Jan', 'Fev', 'Mar', 'Abr', 'Mai', 'Jun', 'Jul'];
-  let dataVals = [140, 185, 172, 210, 240, 225, 270];
+  let labels = ['Jan', 'Fev', 'Mar', 'Abr', 'Mai', 'Jun', 'Jul', 'Ago'];
+  let dataVals = [140, 185, 172, 240, 225, 290, 270, 340];
 
   if (v.datasetId && v.datasetId.startsWith('1a74')) {
     labels = ['Boa Viagem', 'Santo Amaro', 'Afogados', 'Madalena', 'Derby', 'Espinheiro', 'Casa Forte'];
     dataVals = [420, 310, 290, 240, 215, 180, 145];
   }
 
+  const modernPalette = ['#3B82F6', '#10B981', '#F59E0B', '#8B5CF6', '#EC4899', '#06B6D4'];
+
   const dsConfig = {
     label: v.measure || v.title,
-    data: dataVals,
-    backgroundColor: chartType === 'donut' ? [color, '#107C41', '#5C2D91', '#D83B01', '#008272'] : (isArea ? `${color}25` : color),
-    borderColor: chartType === 'donut' ? (isDark ? '#242526' : '#FFFFFF') : color,
-    borderWidth: 2,
+    data: chartType === 'donut' ? [45, 28, 17, 10] : dataVals,
+    backgroundColor: chartType === 'donut' 
+      ? modernPalette.slice(0, 4) 
+      : (isArea ? (context) => {
+          const chart = context.chart;
+          const { ctx, chartArea } = chart;
+          if (!chartArea) return `${baseColor}25`;
+          const gradient = ctx.createLinearGradient(0, chartArea.top, 0, chartArea.bottom);
+          gradient.addColorStop(0, `${baseColor}40`);
+          gradient.addColorStop(1, `${baseColor}02`);
+          return gradient;
+        } : baseColor),
+    borderColor: chartType === 'donut' ? (isDark ? '#1E293B' : '#FFFFFF') : baseColor,
+    borderWidth: chartType === 'donut' ? 3 : 2.5,
     fill: isArea,
-    tension: 0.35,
-    borderRadius: chartType === 'bar' ? 3 : 0
+    tension: 0.42,
+    borderRadius: chartType === 'bar' ? 6 : 0,
+    pointBackgroundColor: baseColor,
+    pointBorderColor: '#FFFFFF',
+    pointHoverRadius: 6,
+    pointRadius: chartType === 'line' || isArea ? 3 : 0
   };
 
   try {
     state.chartInstances[v.id] = new Chart(cvs, {
       type: chartType,
       data: {
-        labels: chartType === 'donut' ? ['Segmento 1', 'Segmento 2', 'Segmento 3', 'Segmento 4', 'Outros'] : labels,
+        labels: chartType === 'donut' ? ['Mobile', 'Desktop', 'Tablet', 'Outros'] : labels,
         datasets: [dsConfig]
       },
       options: {
         responsive: true,
         maintainAspectRatio: false,
+        cutout: chartType === 'donut' ? '76%' : 0,
         plugins: {
           legend: {
             display: chartType === 'donut',
             position: 'bottom',
-            labels: { boxWidth: 8, font: { size: 10 }, color: textColor }
+            labels: { 
+              boxWidth: 10, 
+              boxHeight: 10,
+              usePointStyle: true,
+              pointStyle: 'circle',
+              font: { family: "'Plus Jakarta Sans', sans-serif", size: 11, weight: '500' }, 
+              color: textColor,
+              padding: 14
+            }
+          },
+          tooltip: {
+            backgroundColor: isDark ? '#1E293B' : '#0F172A',
+            titleFont: { family: "'Plus Jakarta Sans', sans-serif", size: 12, weight: '600' },
+            bodyFont: { family: "'Plus Jakarta Sans', sans-serif", size: 12 },
+            padding: 10,
+            cornerRadius: 8
           }
         },
         scales: chartType === 'donut' ? {} : {
-          x: { grid: { display: false }, ticks: { color: textColor, font: { size: 10 } } },
-          y: { grid: { color: gridColor }, ticks: { color: textColor, font: { size: 10 } } }
+          x: { 
+            grid: { display: false }, 
+            ticks: { color: textColor, font: { family: "'Plus Jakarta Sans', sans-serif", size: 11 } } 
+          },
+          y: { 
+            grid: { color: gridColor, drawBorder: false }, 
+            ticks: { color: textColor, font: { family: "'Plus Jakarta Sans', sans-serif", size: 11 } } 
+          }
         }
       }
     });
